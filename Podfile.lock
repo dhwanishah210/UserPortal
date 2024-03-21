@@ -1,0 +1,16 @@
+PODS:
+  - ACFloatingTextfield-Swift (1.8)
+
+DEPENDENCIES:
+  - ACFloatingTextfield-Swift (~> 1.8)
+
+SPEC REPOS:
+  trunk:
+    - ACFloatingTextfield-Swift
+
+SPEC CHECKSUMS:
+  ACFloatingTextfield-Swift: c3212cef9548ae58fa914ea1c26a2f9a4f7cd7df
+
+PODFILE CHECKSUM: 2b8044ce1d375f61c4e07bab3b22beba8219e184
+
+COCOAPODS: 1.15.2
