@@ -606,6 +606,9 @@
                                     <constraint firstAttribute="height" constant="36" id="P6x-oi-M68"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="addUser"/>
+                                <connections>
+                                    <action selector="addUser:" destination="pdl-cZ-mAf" eventType="touchUpInside" id="Owl-9V-5Wl"/>
+                                </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vU9-dX-Iuq">
                                 <rect key="frame" x="20" y="178" width="374" height="622"/>

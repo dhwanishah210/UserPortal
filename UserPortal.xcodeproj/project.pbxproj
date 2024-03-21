@@ -10,7 +10,6 @@
 		6B049B572B4FE800B7ACBFDB /* Pods_UserPortal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 275FA826F61AF4F126B6475F /* Pods_UserPortal.framework */; };
 		7B92794F2BAC0FB10006531A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92794E2BAC0FB10006531A /* AppDelegate.swift */; };
 		7B9279512BAC0FB10006531A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279502BAC0FB10006531A /* SceneDelegate.swift */; };
-		7B9279592BAC0FB10006531A /* UserPortal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279572BAC0FB10006531A /* UserPortal.xcdatamodeld */; };
 		7B92795B2BAC0FC00006531A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B92795A2BAC0FC00006531A /* Assets.xcassets */; };
 		7B92795E2BAC0FC00006531A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B92795C2BAC0FC00006531A /* LaunchScreen.storyboard */; };
 		7B92797C2BAC107E0006531A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279762BAC107E0006531A /* ProfileViewController.swift */; };
@@ -28,6 +27,10 @@
 		7B9279952BAC10D00006531A /* SlideAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279942BAC10D00006531A /* SlideAnimation.swift */; };
 		7B92799C2BAC13CB0006531A /* Validations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92799B2BAC13CB0006531A /* Validations.swift */; };
 		7B9279A02BAC14E20006531A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B92799F2BAC14E20006531A /* Main.storyboard */; };
+		7B9279A52BAC1B1A0006531A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279A42BAC1B1A0006531A /* DataManager.swift */; };
+		7B9279EC2BAC2D1C0006531A /* UserPortal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279EA2BAC2D1C0006531A /* UserPortal.xcdatamodeld */; };
+		7B9279F02BAC2DF60006531A /* DbData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279EE2BAC2DF60006531A /* DbData+CoreDataClass.swift */; };
+		7B9279F12BAC2DF60006531A /* DbData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279EF2BAC2DF60006531A /* DbData+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +40,6 @@
 		7B92794B2BAC0FB10006531A /* UserPortal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UserPortal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B92794E2BAC0FB10006531A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B9279502BAC0FB10006531A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		7B9279582BAC0FB10006531A /* UserPortal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserPortal.xcdatamodel; sourceTree = "<group>"; };
 		7B92795A2BAC0FC00006531A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7B92795D2BAC0FC00006531A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7B92795F2BAC0FC00006531A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,6 +58,10 @@
 		7B9279942BAC10D00006531A /* SlideAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimation.swift; sourceTree = "<group>"; };
 		7B92799B2BAC13CB0006531A /* Validations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validations.swift; sourceTree = "<group>"; };
 		7B92799F2BAC14E20006531A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		7B9279A42BAC1B1A0006531A /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		7B9279EB2BAC2D1C0006531A /* UserPortal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserPortal.xcdatamodel; sourceTree = "<group>"; };
+		7B9279EE2BAC2DF60006531A /* DbData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DbData+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		7B9279EF2BAC2DF60006531A /* DbData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DbData+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +97,9 @@
 		7B92794D2BAC0FB10006531A /* UserPortal */ = {
 			isa = PBXGroup;
 			children = (
+				7B9279EE2BAC2DF60006531A /* DbData+CoreDataClass.swift */,
+				7B9279EF2BAC2DF60006531A /* DbData+CoreDataProperties.swift */,
+				7B9279A32BAC1B070006531A /* Database */,
 				7B9279672BAC0FE50006531A /* Animation */,
 				7B9279662BAC0FD50006531A /* API */,
 				7B9279682BAC0FEC0006531A /* Controllers */,
@@ -102,7 +111,7 @@
 				7B92795A2BAC0FC00006531A /* Assets.xcassets */,
 				7B92795C2BAC0FC00006531A /* LaunchScreen.storyboard */,
 				7B92795F2BAC0FC00006531A /* Info.plist */,
-				7B9279572BAC0FB10006531A /* UserPortal.xcdatamodeld */,
+				7B9279EA2BAC2D1C0006531A /* UserPortal.xcdatamodeld */,
 			);
 			path = UserPortal;
 			sourceTree = "<group>";
@@ -154,6 +163,14 @@
 				7B92799B2BAC13CB0006531A /* Validations.swift */,
 			);
 			path = Validations;
+			sourceTree = "<group>";
+		};
+		7B9279A32BAC1B070006531A /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				7B9279A42BAC1B1A0006531A /* DataManager.swift */,
+			);
+			path = Database;
 			sourceTree = "<group>";
 		};
 		C6CD778CAA841D2B8A11ADA1 /* Pods */ = {
@@ -287,13 +304,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B9279EC2BAC2D1C0006531A /* UserPortal.xcdatamodeld in Sources */,
 				7B9279952BAC10D00006531A /* SlideAnimation.swift in Sources */,
 				7B92797D2BAC107E0006531A /* ViewController.swift in Sources */,
 				7B9279882BAC10A60006531A /* CustomCollectionViewCell.swift in Sources */,
 				7B9279892BAC10A60006531A /* CustomTableViewCell.swift in Sources */,
 				7B92798F2BAC10BB0006531A /* MobilityAPI.swift in Sources */,
-				7B9279592BAC0FB10006531A /* UserPortal.xcdatamodeld in Sources */,
 				7B9279872BAC10A60006531A /* CustomButton.swift in Sources */,
+				7B9279A52BAC1B1A0006531A /* DataManager.swift in Sources */,
 				7B92794F2BAC0FB10006531A /* AppDelegate.swift in Sources */,
 				7B92797F2BAC107E0006531A /* DashboardViewController.swift in Sources */,
 				7B9279902BAC10BB0006531A /* ApiHelper.swift in Sources */,
@@ -302,6 +320,8 @@
 				7B92799C2BAC13CB0006531A /* Validations.swift in Sources */,
 				7B9279512BAC0FB10006531A /* SceneDelegate.swift in Sources */,
 				7B9279802BAC107E0006531A /* TabBarViewController.swift in Sources */,
+				7B9279F02BAC2DF60006531A /* DbData+CoreDataClass.swift in Sources */,
+				7B9279F12BAC2DF60006531A /* DbData+CoreDataProperties.swift in Sources */,
 				7B92797E2BAC107E0006531A /* LoginViewController.swift in Sources */,
 				7B9279912BAC10BB0006531A /* Data.swift in Sources */,
 			);
@@ -501,12 +521,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		7B9279572BAC0FB10006531A /* UserPortal.xcdatamodeld */ = {
+		7B9279EA2BAC2D1C0006531A /* UserPortal.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				7B9279582BAC0FB10006531A /* UserPortal.xcdatamodel */,
+				7B9279EB2BAC2D1C0006531A /* UserPortal.xcdatamodel */,
 			);
-			currentVersion = 7B9279582BAC0FB10006531A /* UserPortal.xcdatamodel */;
+			currentVersion = 7B9279EB2BAC2D1C0006531A /* UserPortal.xcdatamodel */;
 			path = UserPortal.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
