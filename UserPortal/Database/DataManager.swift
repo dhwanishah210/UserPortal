@@ -75,6 +75,7 @@ class DataManager {
 
     
     private func insertDataIntoCoreData(mobilityAPI: MobilityAPI) {
+        var count: Int = 1
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
@@ -91,7 +92,7 @@ class DataManager {
             
             for dataItem in mobilityAPI.data ?? [] {
                 let dbDataObject = DbData(context: context)
-                dbDataObject.id = Int16(dataItem.id ?? 0)
+                dbDataObject.id = Int16(count)
                 dbDataObject.name = dataItem.name
                 dbDataObject.gender = Int16(dataItem.gender ?? 0)
                 dbDataObject.email = dataItem.email
@@ -102,6 +103,7 @@ class DataManager {
             
             do {
                 try context.save()
+                count+=1
                 print("Data saved successfully")
 
             } catch {

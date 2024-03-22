@@ -10,7 +10,7 @@ import Foundation
 class ApiHelper {
     
     static func fetchEmployeeData(completion: @escaping (Result<MobilityAPI, Error>) -> Void) {
-        let urlString = "http://192.168.2.160:901/api/user/getAllUsers"
+        let urlString = "http://192.168.2.160:9001/api/user/getAllUsers"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return

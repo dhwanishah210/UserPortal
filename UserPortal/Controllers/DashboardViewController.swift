@@ -6,23 +6,151 @@
 //
 
 import UIKit
+import CoreData
 
 class DashboardViewController: UIViewController {
     
     var noDataFoundImageView: UIImageView?
-    @IBOutlet weak var tableView: UITableView!
-    
-    @IBOutlet weak var searchBar: UISearchBar!
-    var filteredName: [String] = []
-    
     var mobilityAPI: MobilityAPI?
+    
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var btnFilter: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addNoDataFoundImageView()
         fetchEmployeeData()
-        print(filteredName)
     }
+
+}
+
+extension DashboardViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return mobilityAPI?.data?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        
+        
+        if let data = mobilityAPI?.data?[indexPath.row] {
+            cell.lblName?.text = "Name: \(data.name ?? "")"
+            cell.lblEmail?.text = "Email : \(data.email ?? "")"
+        }
+        
+        return cell
+    }
+}
+
+extension DashboardViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (action, view, completion) in
+            // Perform edit action
+            self?.editData(at: indexPath)
+            completion(true)
+        }
+        editAction.backgroundColor = .gray // Customize the background color
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completion) in
+            // Perform delete action
+            self?.deleteData(at: indexPath)
+            completion(true)
+        }
+        
+        // Create configuration
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        configuration.performsFirstActionWithFullSwipe = false // prevents the action from being triggered by a full swipe
+        
+        return configuration
+    }
+    
+    func editData(at indexPath: IndexPath) {
+        guard let data = mobilityAPI?.data?[indexPath.row] else {
+            return
+        }
+        
+        let alertController = UIAlertController(title: "Edit Data", message: nil, preferredStyle: .alert)
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Name"
+            textField.text = data.name
+        }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Email"
+            textField.text = data.email
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] (_) in
+            guard let nameTextField = alertController.textFields?[0],
+                  let emailTextField = alertController.textFields?[1],
+                  let newName = nameTextField.text,
+                  let newEmail = emailTextField.text else {
+                return
+            }
+            
+            // Update the data
+            self?.updateData(at: indexPath, newName: newName, newEmail: newEmail)
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func updateData(at indexPath: IndexPath, newName: String, newEmail: String) {
+        guard let data = mobilityAPI?.data?[indexPath.row] else {
+            return
+        }
+        
+        // Access the managed object context from the app delegate
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let context = appDelegate.persistentContainer.viewContext
+        
+        // Fetch the corresponding DbData object from the database using its unique identifier (ID)
+        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %ld", data.id ?? 0)
+        print(data.id ?? 0)
+        do {
+            if let dbDataObject = try context.fetch(fetchRequest).first {
+                // Update the attributes of the DbData object with the new values
+                dbDataObject.name = newName
+                dbDataObject.email = newEmail
+                
+                // Save the changes to the database
+                try context.save()
+                
+                // Optionally, you can also update the local data source with the updated values
+                mobilityAPI?.data?[indexPath.row].name = newName
+                mobilityAPI?.data?[indexPath.row].email = newEmail
+            } else {
+                print("Data not found in database.")
+            }
+        } catch {
+            print("Error updating data: \(error.localizedDescription)")
+        }
+    }
+
+    
+    func deleteData(at indexPath: IndexPath) {
+        // Perform the delete operation in your data model or database
+        // Update the UI if needed
+        // Reload table view if necessary
+    }
+}
+
+
+//GetData
+extension DashboardViewController{
     
     func fetchDataAndUpdateUI() {
         // Attempt to fetch data from the API
@@ -46,7 +174,6 @@ class DashboardViewController: UIViewController {
                     // Update UI with the data fetched from Core Data
                     print("Data fetched from Core Data:", localData)
                     print("Local Data: ",localData)
-                    
                     self.mobilityAPI = localData
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
@@ -81,38 +208,13 @@ class DashboardViewController: UIViewController {
             }
         }
     }
-    
-    func addNoDataFoundImageView() {
-        // Create and configure the "No Data Found" image view
-        let image = UIImage(named: "noDataFound")
-        noDataFoundImageView = UIImageView(image: image)
-        noDataFoundImageView?.contentMode = .scaleAspectFit
-        noDataFoundImageView?.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add the image view to the view hierarchy
-        if let imageView = noDataFoundImageView {
-            view.addSubview(imageView)
-            
-            // Add constraints to center the image view vertically and horizontally
-            NSLayoutConstraint.activate([
-                imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                imageView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16), // Ensure leading edge is at least 16 points away from the screen edge
-                imageView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16), // Ensure trailing edge is at most 16 points away from the screen edge
-                imageView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 16), // Ensure top edge is at least 16 points away from the screen edge
-                imageView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16) // Ensure bottom edge is at most 16 points away from the screen edge
-            ])
-        }
-    }
-    
-    func removeNoDataFoundImageView() {
-        noDataFoundImageView?.removeFromSuperview()
-    }
-    
-    
+}
+
+//AddUser
+extension DashboardViewController{
     @IBAction func addUser(_ sender: UIButton) {
         let alertController = UIAlertController(title: "Add Data", message: "Add data for ", preferredStyle: .alert)
-        
+                
         alertController.addTextField { (textField) in
             textField.placeholder = "Name"
         }
@@ -168,9 +270,7 @@ class DashboardViewController: UIViewController {
             do {
                 try context.save()
                 print("Data saved successfully")
-                DispatchQueue.main.async {
-                    self!.tableView.reloadData()
-                }
+                self!.fetchEmployeeData()
             } catch {
                 print("Error saving data: \(error.localizedDescription)")
             }
@@ -183,49 +283,35 @@ class DashboardViewController: UIViewController {
         
         present(alertController, animated: true, completion: nil)
     }
-
 }
 
-extension DashboardViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return mobilityAPI?.data?.count ?? 0
+//NoDataFound Image
+extension DashboardViewController{
+    func addNoDataFoundImageView() {
+        // Create and configure the "No Data Found" image view
+        let image = UIImage(named: "noDataFound")
+        noDataFoundImageView = UIImageView(image: image)
+        noDataFoundImageView?.contentMode = .scaleAspectFit
+        noDataFoundImageView?.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the image view to the view hierarchy
+        if let imageView = noDataFoundImageView {
+            view.addSubview(imageView)
+            
+            // Add constraints to center the image view vertically and horizontally
+            NSLayoutConstraint.activate([
+                imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                imageView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 16), // Ensure leading edge is at least 16 points away from the screen edge
+                imageView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16), // Ensure trailing edge is at most 16 points away from the screen edge
+                imageView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 16), // Ensure top edge is at least 16 points away from the screen edge
+                imageView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16) // Ensure bottom edge is at most 16 points away from the screen edge
+            ])
+        }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-        
-        
-        if let data = mobilityAPI?.data?[indexPath.row] {
-            cell.lblName?.text = "Name: \(data.name ?? "")"
-            cell.lblEmail?.text = "Email : \(data.email ?? "")"
-        }
-        
-        return cell
+
+    func removeNoDataFoundImageView() {
+        noDataFoundImageView?.removeFromSuperview()
     }
 }
-
-extension DashboardViewController:  UITableViewDelegate {
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { (action, view, completion) in
-            // Perform edit action
-            completion(true)
-        }
-        editAction.backgroundColor = .gray // Customize the background color
-        
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
-            // Perform delete action
-            completion(true)
-        }
-        
-        // Create configuration
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
-        configuration.performsFirstActionWithFullSwipe = false // prevents the action from being triggered by a full swipe
-        
-        return configuration
-    }
-}
-

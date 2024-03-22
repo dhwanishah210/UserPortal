@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BMs-62-hNi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="f3l-Se-eRL">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -592,6 +592,9 @@
                                     <constraint firstAttribute="height" constant="44" id="30N-sy-Cgf"/>
                                 </constraints>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="pdl-cZ-mAf" id="5cx-Kt-x7z"/>
+                                </connections>
                             </searchBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Xe-lI-10Q">
                                 <rect key="frame" x="351" y="121" width="46" height="44"/>
@@ -599,6 +602,9 @@
                                     <constraint firstAttribute="height" constant="44" id="Wfx-6f-wQq"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="filter"/>
+                                <connections>
+                                    <action selector="filterData:" destination="pdl-cZ-mAf" eventType="touchUpInside" id="lHd-0g-078"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bpT-su-mtb">
                                 <rect key="frame" x="359" y="70" width="38" height="36"/>
@@ -697,6 +703,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Dashboard" image="doc.plaintext" catalog="system" selectedImage="doc.plaintext.fill" id="jnb-wU-tq3"/>
                     <connections>
+                        <outlet property="btnFilter" destination="5Xe-lI-10Q" id="eN8-yW-BPc"/>
                         <outlet property="searchBar" destination="Mo2-lI-0uN" id="6aC-3W-64K"/>
                         <outlet property="tableView" destination="vU9-dX-Iuq" id="VLd-Rx-2Aq"/>
                     </connections>
@@ -776,25 +783,25 @@
     </scenes>
     <designables>
         <designable name="N5p-Jp-Jxq">
-            <size key="intrinsicContentSize" width="64.5" height="36"/>
+            <size key="intrinsicContentSize" width="60.5" height="32"/>
         </designable>
         <designable name="Wdf-kS-wka">
-            <size key="intrinsicContentSize" width="64.5" height="36"/>
+            <size key="intrinsicContentSize" width="60.5" height="32"/>
         </designable>
         <designable name="Y2i-AH-qku">
-            <size key="intrinsicContentSize" width="105" height="36"/>
+            <size key="intrinsicContentSize" width="101" height="32"/>
         </designable>
         <designable name="dzo-qS-Upp">
-            <size key="intrinsicContentSize" width="156" height="36"/>
+            <size key="intrinsicContentSize" width="152" height="32"/>
         </designable>
         <designable name="fqj-4s-lZh">
-            <size key="intrinsicContentSize" width="186.5" height="36"/>
+            <size key="intrinsicContentSize" width="182.5" height="32"/>
         </designable>
         <designable name="igN-1w-fES">
-            <size key="intrinsicContentSize" width="105" height="36"/>
+            <size key="intrinsicContentSize" width="101" height="32"/>
         </designable>
         <designable name="iqr-Eh-adj">
-            <size key="intrinsicContentSize" width="69.5" height="36"/>
+            <size key="intrinsicContentSize" width="65.5" height="32"/>
         </designable>
     </designables>
     <resources>
