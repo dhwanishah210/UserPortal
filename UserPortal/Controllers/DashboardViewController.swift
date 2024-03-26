@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class DashboardViewController: UIViewController {
+class DashboardViewController: UIViewController, UIViewControllerTransitioningDelegate {
     
     var noDataFoundImageView: UIImageView?
     var mobilityAPI: MobilityAPI?
@@ -17,12 +17,17 @@ class DashboardViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var btnFilter: UIButton!
     
+    let dF = DateFormatter()
+    
+    let dateFormatter = DateFormatter()
+    let currentDate = Date()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addNoDataFoundImageView()
         fetchEmployeeData()
     }
-
+    
 }
 
 extension DashboardViewController: UITableViewDataSource {
@@ -37,8 +42,8 @@ extension DashboardViewController: UITableViewDataSource {
         
         
         if let data = mobilityAPI?.data?[indexPath.row] {
-            cell.lblName?.text = "Name: \(data.name ?? "")"
-            cell.lblEmail?.text = "Email : \(data.email ?? "")"
+            cell.lblName?.text = "\(data.name ?? "")"
+            cell.lblEmail?.text = "\(data.email ?? "")"
         }
         
         return cell
@@ -46,6 +51,24 @@ extension DashboardViewController: UITableViewDataSource {
 }
 
 extension DashboardViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let data = mobilityAPI?.data?[indexPath.row] else {
+                    return
+                }
+                
+                // Instantiate ProfileViewController from storyboard
+                guard let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileVC") as? ProfileViewController else {
+                    return
+                }
+                
+                // Pass the selected data to ProfileViewController
+                profileVC.userData = data
+                
+                // Present ProfileViewController modally
+                present(profileVC, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (action, view, completion) in
@@ -69,6 +92,7 @@ extension DashboardViewController: UITableViewDelegate {
     }
     
     func editData(at indexPath: IndexPath) {
+        
         guard let data = mobilityAPI?.data?[indexPath.row] else {
             return
         }
@@ -85,17 +109,31 @@ extension DashboardViewController: UITableViewDelegate {
             textField.text = data.email
         }
         
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Gender"
+            textField.text = String(data.gender!)
+        }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Mobile"
+            textField.text = data.mobile
+        }
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] (_) in
             guard let nameTextField = alertController.textFields?[0],
                   let emailTextField = alertController.textFields?[1],
+                  let genderTextField = alertController.textFields?[2],
+                  let mobileTextField = alertController.textFields?[3],
                   let newName = nameTextField.text,
-                  let newEmail = emailTextField.text else {
+                  let newEmail = emailTextField.text,
+                  let newGender = genderTextField.text,
+                  let newMobile = mobileTextField.text else {
                 return
             }
             
             // Update the data
-            self?.updateData(at: indexPath, newName: newName, newEmail: newEmail)
+            self?.updateData(id: data.id!, newName: newName, newEmail: newEmail, newGender: Int16(newGender) ?? 0, newMobile: newMobile)
         }
         
         alertController.addAction(cancelAction)
@@ -104,47 +142,80 @@ extension DashboardViewController: UITableViewDelegate {
         present(alertController, animated: true, completion: nil)
     }
     
-    func updateData(at indexPath: IndexPath, newName: String, newEmail: String) {
+    func updateData(id: Int, newName: String, newEmail: String, newGender: Int16, newMobile: String) {
+        
+        let parameters: [String: Any] = [
+            "id": id,
+            "name": newName,
+            "gender": newGender,
+            "email": newEmail,
+            "mobile": newMobile
+        ]
+        
+        ApiHelper.updateUser(parameters: parameters) { result in
+            switch result {
+            case .success(let response):
+                print("User data updated successfully: \(response)")
+                
+                // Access the managed object context from the app delegate
+                DispatchQueue.main.async {
+                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                        return
+                    }
+                    let context = appDelegate.persistentContainer.viewContext
+                    self.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Format for full date and time
+                    let dateTimeString = self.dateFormatter.string(from: self.currentDate)
+                    
+                    // Fetch the corresponding DbData object from the database using its unique identifier (ID)
+                    let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "id == %ld", id)
+                    print(id)
+                    do {
+                        if let dbDataObject = try context.fetch(fetchRequest).first {
+                            // Update the attributes of the DbData object with the new values
+                            dbDataObject.name = newName
+                            dbDataObject.email = newEmail
+                            dbDataObject.updatedAt = dateTimeString
+                            
+                            // Save the changes to the database
+                            try context.save()
+                            self.fetchEmployeeData()
+                        } else {
+                            print("Data not found in database.")
+                        }
+                    } catch {
+                        print("Error updating data: \(error.localizedDescription)")
+                    }
+                }
+                
+            case .failure(let error):
+                print("Failed to update user data: \(error)")
+            }
+        }
+    }
+    
+    
+    func deleteData(at indexPath: IndexPath) {
+        
         guard let data = mobilityAPI?.data?[indexPath.row] else {
             return
         }
+        let parameters: [String: Any] = ["id": data.id as Any]
         
-        // Access the managed object context from the app delegate
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        let context = appDelegate.persistentContainer.viewContext
-        
-        // Fetch the corresponding DbData object from the database using its unique identifier (ID)
-        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %ld", data.id ?? 0)
-        print(data.id ?? 0)
-        do {
-            if let dbDataObject = try context.fetch(fetchRequest).first {
-                // Update the attributes of the DbData object with the new values
-                dbDataObject.name = newName
-                dbDataObject.email = newEmail
-                
-                // Save the changes to the database
-                try context.save()
-                
-                // Optionally, you can also update the local data source with the updated values
-                mobilityAPI?.data?[indexPath.row].name = newName
-                mobilityAPI?.data?[indexPath.row].email = newEmail
-            } else {
-                print("Data not found in database.")
+        // Call the API to delete the user
+        ApiHelper.deleteUser(parameters: parameters) { result in
+            switch result {
+            case .success(let response):
+                print("User deleted successfully: \(response)")
+                // If the API call is successful, delete the corresponding user from the database
+                DispatchQueue.main.async {
+                    DataManager.shared.deleteUserDataFromDatabase(id: data.id!)
+                }
+                self.fetchEmployeeData()
+            case .failure(let error):
+                print("Failed to delete user: \(error)")
             }
-        } catch {
-            print("Error updating data: \(error.localizedDescription)")
         }
-    }
-
-    
-    func deleteData(at indexPath: IndexPath) {
-        // Perform the delete operation in your data model or database
-        // Update the UI if needed
-        // Reload table view if necessary
     }
 }
 
@@ -192,7 +263,7 @@ extension DashboardViewController{
     }
     
     func fetchEmployeeData() {
-        ApiHelper.fetchEmployeeData { [weak self] (result: Result<MobilityAPI, Error>) in
+        ApiHelper.fetchUserData { [weak self] (result: Result<MobilityAPI, Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let mobilityAPI):
@@ -214,7 +285,7 @@ extension DashboardViewController{
 extension DashboardViewController{
     @IBAction func addUser(_ sender: UIButton) {
         let alertController = UIAlertController(title: "Add Data", message: "Add data for ", preferredStyle: .alert)
-                
+        
         alertController.addTextField { (textField) in
             textField.placeholder = "Name"
         }
@@ -234,6 +305,7 @@ extension DashboardViewController{
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
         let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
             guard self != nil else { return }
             
@@ -252,30 +324,63 @@ extension DashboardViewController{
                 return
             }
             
-            // Access the managed object context from the app delegate
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
             
-            let context = appDelegate.persistentContainer.viewContext
+            // Now make a network request to add the user data to the API
+            let parameters: [String: Any] = [
+                "name": name,
+                "gender": gender,
+                "mobile": mobile,
+                "email": email
+            ]
             
-            // Create a new DbData object and insert it into Core Data
-            let dbDataObject = DbData(context: context)
-            dbDataObject.name = name
-            dbDataObject.gender = Int16(gender)
-            dbDataObject.mobile = mobile
-            dbDataObject.email = email
-            
-            // Save changes to Core Data
-            do {
-                try context.save()
-                print("Data saved successfully")
-                self!.fetchEmployeeData()
-            } catch {
-                print("Error saving data: \(error.localizedDescription)")
+            // Make a POST request to the API endpoint to add user data
+            ApiHelper.addUser(parameters: parameters) { result in
+                switch result {
+                case .success(let response):
+                    print("User added successfully to the API: \(response)")
+                    if let responseData = response.data(using: .utf8),
+                       let json = try? JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
+                        // Access the 'data' field from the JSON dictionary
+                        if let data = json["data"] as? Int {
+                            print("Data from response: \(data)")
+                            let context = appDelegate.persistentContainer.viewContext
+                            
+                            self!.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Format for full date and time
+                            let dateTimeString = self!.dateFormatter.string(from: self!.currentDate)
+                            
+                            // Create a new DbData object and insert it into Core Data
+                            let dbDataObject = DbData(context: context)
+                            //DataManager.count+=1
+                            dbDataObject.id = Int16(data)
+                            dbDataObject.name = name
+                            dbDataObject.gender = Int16(gender)
+                            dbDataObject.mobile = mobile
+                            dbDataObject.email = email
+                            dbDataObject.createdAt = dateTimeString
+                            
+                            
+                            // Save changes to Core Data
+                            do {
+                                try context.save()
+                                print("Data saved successfully")
+                                self!.fetchEmployeeData()
+                            } catch {
+                                print("Error saving data: \(error.localizedDescription)")
+                            }
+                        } else {
+                            print("Failed to extract data from response.")
+                        }
+                    } else {
+                        print("Failed to parse JSON response.")
+                    }
+                case .failure(let error):
+                    print("Failed to add user to API: \(error)")
+                // Handle failure if needed
+                }
             }
-            
-            // Optionally, you can update UI or perform any additional actions
         }
         
         alertController.addAction(cancelAction)
@@ -310,7 +415,7 @@ extension DashboardViewController{
         }
     }
     
-
+    
     func removeNoDataFoundImageView() {
         noDataFoundImageView?.removeFromSuperview()
     }

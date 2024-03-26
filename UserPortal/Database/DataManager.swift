@@ -15,11 +15,13 @@ class DataManager {
     
     private init() {}
     
+    static var count: Int = 0
+    
 
     func fetchData(completion: @escaping (Result<MobilityAPI, Error>) -> Void) {
         
         // First attempt to fetch data from the API
-        ApiHelper.fetchEmployeeData { result in
+        ApiHelper.fetchUserData { result in
             switch result {
             case .success(let mobilityAPI):
                 // If data is successfully fetched from the API, insert it into Core Data
@@ -75,43 +77,73 @@ class DataManager {
 
     
     private func insertDataIntoCoreData(mobilityAPI: MobilityAPI) {
-        var count: Int = 1
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
 
-            let persistentContainer = appDelegate.persistentContainer
-            if let storeURL = persistentContainer.persistentStoreCoordinator.persistentStores.first?.url {
-                print("Database Path: \(storeURL)")
-            } else {
-                print("Database path not found")
-            }
-            
             let context = appDelegate.persistentContainer.viewContext
             
-            for dataItem in mobilityAPI.data ?? [] {
-                let dbDataObject = DbData(context: context)
-                dbDataObject.id = Int16(count)
-                dbDataObject.name = dataItem.name
-                dbDataObject.gender = Int16(dataItem.gender ?? 0)
-                dbDataObject.email = dataItem.email
-                dbDataObject.mobile = dataItem.mobile
-                dbDataObject.createdAt = dataItem.createdAt
-                dbDataObject.updatedAt = dataItem.updatedAt
-            }
+            // Fetch existing DbData objects with the same IDs as in the MobilityAPI
+            let existingIds = Set(mobilityAPI.data?.compactMap { $0.id } ?? [])
+            let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id IN %@", existingIds)
             
             do {
-                try context.save()
-                count+=1
-                print("Data saved successfully")
+                let existingObjects = try context.fetch(fetchRequest)
+                let existingIdsSet = Set(existingObjects.map { $0.id })
 
+                for dataItem in mobilityAPI.data ?? [] {
+                    // Check if the object with the same ID already exists
+                    if existingIdsSet.contains(Int16(dataItem.id!)) {
+                        print("Data with ID \(String(describing: dataItem.id)) already exists in the database. Skipping insertion.")
+                        continue
+                    }
+
+                    let dbDataObject = DbData(context: context)
+                    dbDataObject.id = Int16(dataItem.id!)
+                    dbDataObject.name = dataItem.name
+                    dbDataObject.gender = Int16(dataItem.gender ?? 0)
+                    dbDataObject.email = dataItem.email
+                    dbDataObject.mobile = dataItem.mobile
+                    dbDataObject.createdAt = dataItem.createdAt
+                    dbDataObject.updatedAt = dataItem.updatedAt
+                }
+
+                try context.save()
+                print("Data saved successfully")
             } catch {
                 print("Error saving data: \(error.localizedDescription)")
             }
         }
     }
 
+    func deleteUserDataFromDatabase(id: Int) {
+        // Access the managed object context from the app delegate
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let context = appDelegate.persistentContainer.viewContext
+
+        // Fetch the corresponding DbData object from the database using its unique identifier (ID)
+        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %ld", id)
+
+        do {
+            if let dbDataObject = try context.fetch(fetchRequest).first {
+                // Delete the DbData object from the database
+                context.delete(dbDataObject)
+
+                // Save the changes to the database
+                try context.save()
+                print("User data deleted from the database.")
+            } else {
+                print("User data not found in the database.")
+            }
+        } catch {
+            print("Error deleting user data from the database: \(error.localizedDescription)")
+        }
+    }
     
     // Other data management methods...
 }
