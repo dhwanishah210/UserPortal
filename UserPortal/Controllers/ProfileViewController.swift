@@ -23,7 +23,7 @@ class ProfileViewController: UIViewController {
             lblName.text = "Name: \(userData.name ?? "")"
             lblEmail.text = "Email: \(userData.email ?? "")"
             lblMobile.text = "Mobile: \(userData.mobile ?? "")"
-            lblGender.text = "Gender: \(String(userData.gender!) )"
+            //lblGender.text = "Gender: \(String(userData.gender!) )"
 
         }
 

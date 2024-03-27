@@ -593,7 +593,7 @@
                                 </constraints>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <outlet property="delegate" destination="pdl-cZ-mAf" id="5cx-Kt-x7z"/>
+                                    <outlet property="delegate" destination="pdl-cZ-mAf" id="RDv-LN-qwE"/>
                                 </connections>
                             </searchBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Xe-lI-10Q">
@@ -603,7 +603,7 @@
                                 </constraints>
                                 <state key="normal" title="Button" image="filter"/>
                                 <connections>
-                                    <action selector="filterData:" destination="pdl-cZ-mAf" eventType="touchUpInside" id="lHd-0g-078"/>
+                                    <action selector="filterData:" destination="pdl-cZ-mAf" eventType="touchUpInside" id="U38-HW-sJT"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bpT-su-mtb">
@@ -757,15 +757,6 @@
                                 <color key="textColor" name="CustomBlue"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gender" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DyK-k2-uUe">
-                                <rect key="frame" x="20" y="496" width="374" height="39"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="39" id="Q8h-dC-59c"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" name="CustomBlue"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="JJn-MA-etT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -773,7 +764,6 @@
                             <constraint firstItem="JJn-MA-etT" firstAttribute="trailing" secondItem="WNl-yo-yx1" secondAttribute="trailing" constant="17" id="0fD-So-PtV"/>
                             <constraint firstItem="JJn-MA-etT" firstAttribute="trailing" secondItem="X5n-Xg-0eP" secondAttribute="trailing" constant="87" id="2Ga-gf-DRy"/>
                             <constraint firstItem="WNl-yo-yx1" firstAttribute="top" secondItem="JJn-MA-etT" secondAttribute="top" constant="21" id="6Wp-dc-w8F"/>
-                            <constraint firstItem="DyK-k2-uUe" firstAttribute="leading" secondItem="JJn-MA-etT" secondAttribute="leading" constant="20" id="DLz-hS-oTd"/>
                             <constraint firstItem="WNl-yo-yx1" firstAttribute="leading" secondItem="JJn-MA-etT" secondAttribute="leading" constant="20" id="E4k-zt-GY3"/>
                             <constraint firstItem="JJn-MA-etT" firstAttribute="trailing" secondItem="2eA-CJ-Wy5" secondAttribute="trailing" constant="20" id="K2E-5d-rDB"/>
                             <constraint firstItem="X5n-Xg-0eP" firstAttribute="leading" secondItem="JJn-MA-etT" secondAttribute="leading" constant="87" id="Nab-ig-eiX"/>
@@ -785,8 +775,6 @@
                             <constraint firstItem="f54-U0-jjb" firstAttribute="top" secondItem="n2o-Ie-Uh0" secondAttribute="bottom" constant="8" symbolic="YES" id="fB6-38-xrN"/>
                             <constraint firstItem="JJn-MA-etT" firstAttribute="trailing" secondItem="f54-U0-jjb" secondAttribute="trailing" constant="19" id="h5l-Ep-2pa"/>
                             <constraint firstItem="2eA-CJ-Wy5" firstAttribute="leading" secondItem="JJn-MA-etT" secondAttribute="leading" constant="20" id="hOT-er-ekB"/>
-                            <constraint firstItem="JJn-MA-etT" firstAttribute="trailing" secondItem="DyK-k2-uUe" secondAttribute="trailing" constant="20" id="i8D-WA-JqQ"/>
-                            <constraint firstItem="DyK-k2-uUe" firstAttribute="top" secondItem="2eA-CJ-Wy5" secondAttribute="bottom" constant="2" id="kl6-MD-9zp"/>
                             <constraint firstItem="X5n-Xg-0eP" firstAttribute="height" secondItem="Gfs-dt-5K9" secondAttribute="height" multiplier="0.19308" id="sdW-XR-86H"/>
                             <constraint firstItem="f54-U0-jjb" firstAttribute="leading" secondItem="JJn-MA-etT" secondAttribute="leading" constant="21" id="w9f-ye-DF2"/>
                         </constraints>
@@ -794,7 +782,6 @@
                     <tabBarItem key="tabBarItem" title="Profile" image="person" catalog="system" selectedImage="person.fill" id="rb3-Xu-mzz"/>
                     <connections>
                         <outlet property="lblEmail" destination="f54-U0-jjb" id="iYK-GY-oDs"/>
-                        <outlet property="lblGender" destination="DyK-k2-uUe" id="3wa-sU-IiX"/>
                         <outlet property="lblMobile" destination="2eA-CJ-Wy5" id="bUT-lk-k3k"/>
                         <outlet property="lblName" destination="n2o-Ie-Uh0" id="4tH-lE-hEE"/>
                     </connections>

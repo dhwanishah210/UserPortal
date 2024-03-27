@@ -30,6 +30,7 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     
 }
 
+//CELL of Table
 extension DashboardViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,19 +55,19 @@ extension DashboardViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = mobilityAPI?.data?[indexPath.row] else {
-                    return
-                }
-                
-                // Instantiate ProfileViewController from storyboard
-                guard let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileVC") as? ProfileViewController else {
-                    return
-                }
-                
-                // Pass the selected data to ProfileViewController
-                profileVC.userData = data
-                
-                // Present ProfileViewController modally
-                present(profileVC, animated: true, completion: nil)
+            return
+        }
+        
+        // Instantiate ProfileViewController from storyboard
+        guard let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileVC") as? ProfileViewController else {
+            return
+        }
+        
+        // Pass the selected data to ProfileViewController
+        profileVC.userData = data
+        
+        // Present ProfileViewController modally
+        present(profileVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -419,4 +420,130 @@ extension DashboardViewController{
     func removeNoDataFoundImageView() {
         noDataFoundImageView?.removeFromSuperview()
     }
+}
+
+
+//FILTERDATA
+extension DashboardViewController{
+    @IBAction func filterData(_ sender: UIButton) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.modalPresentationStyle = .popover
+        alertController.popoverPresentationController?.sourceView = btnFilter
+        alertController.popoverPresentationController?.sourceRect = btnFilter.bounds
+        alertController.popoverPresentationController?.permittedArrowDirections = [.down]
+        
+        alertController.addAction(UIAlertAction(title: "Ascending", style: .default, handler: { (_) in
+            // Fetch CoreData objects sorted by name in ascending order
+            self.fetchAndSortData(sortKey: "name", ascending: true)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Descending", style: .default, handler: { (_) in
+            // Fetch CoreData objects sorted by name in descending order
+            self.fetchAndSortData(sortKey: "name", ascending: false)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Last Inserted", style: .default, handler: { (_) in
+            // Sort data in ascending order
+            self.fetchAndSortData(sortKey: "createdAt", ascending: false)
+            self.tableView.reloadData()
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Last Modified", style: .default, handler: { (_) in
+            // Sort data in ascending order
+            self.fetchAndSortData(sortKey: "updatedAt", ascending: false)
+            self.tableView.reloadData()
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    
+    func fetchAndSortData(sortKey: String, ascending: Bool) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+        
+        // Sort descriptors based on sort key and order
+        let sortDescriptor = NSSortDescriptor(key: sortKey, ascending: ascending)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        do {
+            // Fetch sorted CoreData objects
+            let sortedData = try context.fetch(fetchRequest)
+            
+            // Convert fetched DbData objects to Data objects
+            let convertedData = sortedData.compactMap { dbData -> Data? in
+                // Convert DbData to Data object as per your requirement
+                return convertDbDataToData(dbData)
+            }
+            
+            // Update mobilityAPI data with sorted and converted CoreData objects
+            self.mobilityAPI?.data = convertedData
+            
+            // Reload table view to reflect the changes
+            self.tableView.reloadData()
+        } catch {
+            print("Error fetching sorted data: \(error.localizedDescription)")
+        }
+    }
+    
+    func convertDbDataToData(_ dbData: DbData) -> Data? {
+        // Convert DbData to Data object as per your requirement
+        // For example:
+        let data = Data(name: dbData.name, email: dbData.email)
+        return data
+    }
+    
+}
+
+
+//SEARCH
+extension DashboardViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            // If search text is empty, show all data
+            fetchEmployeeData()
+        } else {
+            // Filter data based on search text
+            searchData(with: searchText)
+        }
+    }
+    
+    func searchData(with searchText: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+        
+        // Create compound predicate to search in name, email, and mobile fields
+        let predicate = NSPredicate(format: "name CONTAINS[c] %@ OR email CONTAINS[c] %@ OR mobile CONTAINS[c] %@", searchText, searchText, searchText)
+        fetchRequest.predicate = predicate
+        
+        do {
+            // Fetch filtered CoreData objects
+            let filteredData = try context.fetch(fetchRequest)
+            
+            // Convert fetched DbData objects to Data objects
+            let convertedData = filteredData.compactMap { dbData -> Data? in
+                // Convert DbData to Data object as per your requirement
+                return convertDbDataToData(dbData)
+            }
+            
+            // Update mobilityAPI data with converted Data objects
+            self.mobilityAPI?.data = convertedData
+            
+            // Reload table view to reflect the changes
+            tableView.reloadData()
+        } catch {
+            print("Error fetching filtered data: \(error.localizedDescription)")
+        }
+    }
+    
 }
