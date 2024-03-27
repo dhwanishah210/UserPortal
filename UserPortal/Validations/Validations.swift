@@ -10,6 +10,7 @@ import ACFloatingTextfield_Swift
 
 class Validations{
     
+    var pass: String = ""
     //EMAIL
     func emailValidation(_ sender: ACFloatingTextfield) -> Bool {
         if let email = sender.text
@@ -49,6 +50,7 @@ class Validations{
     
     //PASSWORD
     func passwordValidation(_ sender: ACFloatingTextfield) -> Bool{
+        pass = sender.text!
         if let password = sender.text
         {
             if password.isEmpty{
@@ -114,9 +116,29 @@ class Validations{
         return !predicate.evaluate(with: value)
     }
     
-//    func confirmPasswordValidation(_ sender: ACFloatingTextfield) {
-//        if let confirm
-//    }
+    func confirmPasswordValidation(_ sender: ACFloatingTextfield) -> Bool{
+        if let password = sender.text
+        {
+            if password.isEmpty{
+                sender.placeholder = "Password"
+                sender.selectedLineColor = UIColor(named: "CustomBlue")!
+                sender.selectedPlaceHolderColor = UIColor(named: "CustomBlue")!
+                return false
+            }
+            else if password != pass{
+                sender.placeholder = "Password does not match"
+                sender.selectedLineColor = UIColor.red
+                sender.selectedPlaceHolderColor = UIColor.red
+                return false
+            }else{
+                sender.placeholder = "Password"
+                sender.selectedLineColor = UIColor(named: "CustomBlue")!
+                sender.selectedPlaceHolderColor = UIColor(named: "CustomBlue")!
+                return true
+            }
+        }
+        return false
+    }
     
     //PHONE NUMBER
     func phoneValidation(_ sender: ACFloatingTextfield) -> Bool {

@@ -20,9 +20,9 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         if let userData = userData {
-            lblName.text = "Name: \(userData.name ?? "")"
-            lblEmail.text = "Email: \(userData.email ?? "")"
-            lblMobile.text = "Mobile: \(userData.mobile ?? "")"
+            lblName.text = "\(userData.name ?? "")"
+            lblEmail.text = "\(userData.email ?? "")"
+            lblMobile.text = "\(userData.mobile ?? "")"
             //lblGender.text = "Gender: \(String(userData.gender!) )"
 
         }
@@ -30,10 +30,17 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction func btnLogout(_ sender: UIButton) {
-        let vc = self.storyboard?.instantiateViewController(identifier: "VC") as! ViewController
+        let vc = self.storyboard?.instantiateViewController(identifier: "LoginVC") as! LoginViewController
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @IBAction func btnBack(_ sender: UIButton) {
+        let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
+        vc.modalPresentationStyle = .custom
+        vc.transitioningDelegate = self
+        self.navigationController?.popViewController(animated: true)
     }
 }
 

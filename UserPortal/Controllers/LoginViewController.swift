@@ -20,6 +20,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     @IBAction func emailChanged(_ sender: ACFloatingTextfield) {

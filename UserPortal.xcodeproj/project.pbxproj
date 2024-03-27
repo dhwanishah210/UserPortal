@@ -31,6 +31,7 @@
 		7B9279EC2BAC2D1C0006531A /* UserPortal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279EA2BAC2D1C0006531A /* UserPortal.xcdatamodeld */; };
 		7B9279F02BAC2DF60006531A /* DbData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279EE2BAC2DF60006531A /* DbData+CoreDataClass.swift */; };
 		7B9279F12BAC2DF60006531A /* DbData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279EF2BAC2DF60006531A /* DbData+CoreDataProperties.swift */; };
+		7BC5B52B2BB41815001590F0 /* CustomToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC5B52A2BB41815001590F0 /* CustomToast.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		7B9279EB2BAC2D1C0006531A /* UserPortal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserPortal.xcdatamodel; sourceTree = "<group>"; };
 		7B9279EE2BAC2DF60006531A /* DbData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DbData+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		7B9279EF2BAC2DF60006531A /* DbData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DbData+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		7BC5B52A2BB41815001590F0 /* CustomToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToast.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +155,7 @@
 				7B9279842BAC10A60006531A /* CustomButton.swift */,
 				7B9279852BAC10A60006531A /* CustomCollectionViewCell.swift */,
 				7B9279862BAC10A60006531A /* CustomTableViewCell.swift */,
+				7BC5B52A2BB41815001590F0 /* CustomToast.swift */,
 			);
 			path = CustomFiles;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				7B92797F2BAC107E0006531A /* DashboardViewController.swift in Sources */,
 				7B9279902BAC10BB0006531A /* ApiHelper.swift in Sources */,
 				7B9279812BAC107E0006531A /* SignupViewController.swift in Sources */,
+				7BC5B52B2BB41815001590F0 /* CustomToast.swift in Sources */,
 				7B92797C2BAC107E0006531A /* ProfileViewController.swift in Sources */,
 				7B92799C2BAC13CB0006531A /* Validations.swift in Sources */,
 				7B9279512BAC0FB10006531A /* SceneDelegate.swift in Sources */,

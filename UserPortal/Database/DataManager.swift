@@ -66,6 +66,8 @@ class DataManager {
                 
                 // Construct MobilityAPI model with the fetched data
                 mobilityAPI = MobilityAPI(status: 200, data: data, message: "Data fetched from Core Data")
+                
+                
             } catch {
                 print("Error fetching data from Core Data: \(error.localizedDescription)")
             }

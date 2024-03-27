@@ -57,17 +57,15 @@ extension DashboardViewController: UITableViewDelegate {
         guard let data = mobilityAPI?.data?[indexPath.row] else {
             return
         }
-        
-        // Instantiate ProfileViewController from storyboard
-        guard let profileVC = storyboard?.instantiateViewController(withIdentifier: "ProfileVC") as? ProfileViewController else {
-            return
-        }
+
+        let vc = self.storyboard?.instantiateViewController(identifier: "ProfileVC") as! ProfileViewController
+        vc.modalPresentationStyle = .custom
+        vc.transitioningDelegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
         
         // Pass the selected data to ProfileViewController
-        profileVC.userData = data
+        vc.userData = data
         
-        // Present ProfileViewController modally
-        present(profileVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -191,6 +189,7 @@ extension DashboardViewController: UITableViewDelegate {
                 
             case .failure(let error):
                 print("Failed to update user data: \(error)")
+                CustomToast.show(message: error.localizedDescription)
             }
         }
     }
@@ -214,7 +213,9 @@ extension DashboardViewController: UITableViewDelegate {
                 }
                 self.fetchEmployeeData()
             case .failure(let error):
+                CustomToast.show(message: error.localizedDescription)
                 print("Failed to delete user: \(error)")
+                
             }
         }
     }
@@ -232,11 +233,12 @@ extension DashboardViewController{
             case .success(let mobilityAPI):
                 // Update UI with the data fetched from the API
                 print(result)
-                print("Data fetched from API:", mobilityAPI)
+                print("Data fetched:", mobilityAPI)
                 self.mobilityAPI = mobilityAPI
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                     self.removeNoDataFoundImageView()
+                    CustomToast.show(message: mobilityAPI.message)
                 }
             case .failure(let error):
                 print(result)

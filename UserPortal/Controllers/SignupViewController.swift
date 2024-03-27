@@ -12,6 +12,7 @@ class SignupViewController: UIViewController {
     
     var validation = Validations()
     
+    @IBOutlet weak var btnProfilePhoto: UIButton!
     @IBOutlet weak var radioFemale: UIButton!
     @IBOutlet weak var radioMale: UIButton!
     
@@ -23,6 +24,7 @@ class SignupViewController: UIViewController {
     
     var email: Bool = false
     var pass: Bool = false
+    var confirmPass: Bool = false
     var phone: Bool = false
     
     override func viewDidLoad() {
@@ -54,6 +56,7 @@ class SignupViewController: UIViewController {
     }
     
     @IBAction func confirmPassword(_ sender: ACFloatingTextfield) {
+        confirmPass = validation.confirmPasswordValidation(txtConfirmPassword)
     }
     
     @IBAction func btnSignup(_ sender: CustomButton) {
@@ -71,6 +74,75 @@ class SignupViewController: UIViewController {
         vc.transitioningDelegate = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    @IBAction func btnPhoto(_ sender: UIButton) {
+        
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let galleryAction = UIAlertAction(title: "Select from Gallery", style: .default) { _ in
+            // Handle action for selecting from gallery
+            self.selectFromGallery()
+        }
+        if let galleryImage = UIImage(named: "GalleryIcon") {
+            galleryAction.setValue(galleryImage.withRenderingMode(.alwaysOriginal), forKey: "image")
+        }
+        
+        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .default) { _ in
+            // Handle action for taking a photo
+            self.takePhoto()
+        }
+        if let cameraImage = UIImage(named: "CameraIcon") {
+            takePhotoAction.setValue(cameraImage.withRenderingMode(.alwaysOriginal), forKey: "image")
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        actionSheet.addAction(galleryAction)
+        actionSheet.addAction(takePhotoAction)
+        actionSheet.addAction(cancelAction)
+        
+        // For iPad support
+        if let popoverController = actionSheet.popoverPresentationController {
+            popoverController.sourceView = sender
+            popoverController.sourceRect = sender.bounds
+            popoverController.permittedArrowDirections = [.down]
+        }
+        
+        present(actionSheet, animated: true, completion: nil)
+        
+    }
+    
+    
+    func selectFromGallery() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+    
+    func takePhoto() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = self
+        present(picker,animated: true)
+    }
+    
+}
+
+extension SignupViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else{
+            return
+        }
+        btnProfilePhoto.setImage(image, for: .normal)
+    }
+
 }
 
 extension SignupViewController: UIViewControllerTransitioningDelegate {
