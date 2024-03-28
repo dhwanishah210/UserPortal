@@ -20,6 +20,8 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        txtEmail.delegate = self
+        txtPassword.delegate = self
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
@@ -38,6 +40,8 @@ class LoginViewController: UIViewController {
             vc.modalPresentationStyle = .custom
             vc.transitioningDelegate = self
             self.navigationController?.pushViewController(vc, animated: true)
+        }else{
+            CustomToast.show(message: "All Fields are required")
         }
     }
     
@@ -56,5 +60,14 @@ extension LoginViewController: UIViewControllerTransitioningDelegate {
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return SlideTransition(isPresenting: false)
+    }
+}
+
+extension LoginViewController: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Dismiss keyboard when return key is pressed
+        textField.resignFirstResponder()
+        return true
     }
 }

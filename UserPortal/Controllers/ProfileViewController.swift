@@ -7,8 +7,14 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController, ProfileImageDelegate {
+    
+    func didSelectImage(_ image: UIImage) {
+        profileImageView.image = image
+    }
+    
 
+    @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var lblEmail: UILabel!
     @IBOutlet weak var lblMobile: UILabel!

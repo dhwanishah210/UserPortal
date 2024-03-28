@@ -21,6 +21,7 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var txtPhoneNumber: ACFloatingTextfield!
     @IBOutlet weak var txtPassword: ACFloatingTextfield!
     @IBOutlet weak var txtConfirmPassword: ACFloatingTextfield!
+    @IBOutlet weak var btnSignup: CustomButton!
     
     var email: Bool = false
     var pass: Bool = false
@@ -29,8 +30,21 @@ class SignupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        txtName.delegate = self
+        txtPassword.delegate = self
+        txtEmail.delegate = self
+        txtConfirmPassword.delegate = self
+        txtPhoneNumber.delegate = self
+        txtPhoneNumber.keyboardType = .numberPad
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        view.addGestureRecognizer(tapGesture)
     }
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+            // Check if tap is outside the text field
+            if !txtPhoneNumber.frame.contains(sender.location(in: view)) {
+                txtPhoneNumber.resignFirstResponder() // Dismiss the keyboard
+            }
+        }
     
     @IBAction func btnRadioTapped(_ sender: UIButton) {
         radioMale.setImage(UIImage(named: "RBUnchecked"), for: .normal)
@@ -65,6 +79,8 @@ class SignupViewController: UIViewController {
             vc.modalPresentationStyle = .custom
             vc.transitioningDelegate = self
             self.navigationController?.pushViewController(vc, animated: true)
+        }else{
+            CustomToast.show(message: "All Fields are required")
         }
     }
     
@@ -153,4 +169,18 @@ extension SignupViewController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return SlideTransition(isPresenting: false)
     }
+}
+
+
+extension SignupViewController: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Dismiss keyboard when return key is pressed
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
+protocol ProfileImageDelegate: AnyObject {
+    func didSelectImage(_ image: UIImage)
 }

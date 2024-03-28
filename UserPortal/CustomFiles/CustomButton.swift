@@ -26,7 +26,7 @@ class CustomButton: UIButton {
             
            // backgroundColor = UIColor.init(named: "Linear-Green")
             layer.cornerRadius = 10 // Adjust corner radius as per your requirement
-            titleLabel?.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+            titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
             contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20) // Adjust padding as needed
         }
 
