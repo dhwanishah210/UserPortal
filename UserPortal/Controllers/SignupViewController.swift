@@ -13,6 +13,7 @@ class SignupViewController: UIViewController {
     var validation = Validations()
     
     @IBOutlet weak var btnProfilePhoto: UIButton!
+    @IBOutlet weak var btnSignup: CustomButton!
     @IBOutlet weak var radioFemale: UIButton!
     @IBOutlet weak var radioMale: UIButton!
     
@@ -21,12 +22,11 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var txtPhoneNumber: ACFloatingTextfield!
     @IBOutlet weak var txtPassword: ACFloatingTextfield!
     @IBOutlet weak var txtConfirmPassword: ACFloatingTextfield!
-    @IBOutlet weak var btnSignup: CustomButton!
     
     var email: Bool = false
+    var phone: Bool = false
     var pass: Bool = false
     var confirmPass: Bool = false
-    var phone: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,22 +34,22 @@ class SignupViewController: UIViewController {
         txtPassword.delegate = self
         txtEmail.delegate = self
         txtConfirmPassword.delegate = self
-        txtPhoneNumber.delegate = self
         txtPhoneNumber.keyboardType = .numberPad
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         view.addGestureRecognizer(tapGesture)
     }
+    
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-            // Check if tap is outside the text field
-            if !txtPhoneNumber.frame.contains(sender.location(in: view)) {
-                txtPhoneNumber.resignFirstResponder() // Dismiss the keyboard
-            }
+        // Check if tap is outside the text field
+        if !txtPhoneNumber.frame.contains(sender.location(in: view)) {
+            txtPhoneNumber.resignFirstResponder() // Dismiss the keyboard
         }
+    }
     
     @IBAction func btnRadioTapped(_ sender: UIButton) {
         radioMale.setImage(UIImage(named: "RBUnchecked"), for: .normal)
         radioFemale.setImage(UIImage(named: "RBUnchecked"), for: .normal)
-        
         if sender.currentImage == UIImage(named: "RBUnchecked"){
             sender.setImage(UIImage(named: "RBChecked"), for: .normal)
         }else{
@@ -88,7 +88,7 @@ class SignupViewController: UIViewController {
         let vc = self.storyboard?.instantiateViewController(identifier: "LoginVC") as! LoginViewController 
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func btnPhoto(_ sender: UIButton) {
@@ -117,17 +117,8 @@ class SignupViewController: UIViewController {
         actionSheet.addAction(takePhotoAction)
         actionSheet.addAction(cancelAction)
         
-        // For iPad support
-        if let popoverController = actionSheet.popoverPresentationController {
-            popoverController.sourceView = sender
-            popoverController.sourceRect = sender.bounds
-            popoverController.permittedArrowDirections = [.down]
-        }
-        
         present(actionSheet, animated: true, completion: nil)
-        
     }
-    
     
     func selectFromGallery() {
         let vc = UIImagePickerController()
@@ -158,7 +149,6 @@ extension SignupViewController: UIImagePickerControllerDelegate, UINavigationCon
         }
         btnProfilePhoto.setImage(image, for: .normal)
     }
-
 }
 
 extension SignupViewController: UIViewControllerTransitioningDelegate {
@@ -173,7 +163,7 @@ extension SignupViewController: UIViewControllerTransitioningDelegate {
 
 
 extension SignupViewController: UITextFieldDelegate {
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Dismiss keyboard when return key is pressed
         textField.resignFirstResponder()

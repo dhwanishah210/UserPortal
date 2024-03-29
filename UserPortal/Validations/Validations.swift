@@ -11,6 +11,7 @@ import ACFloatingTextfield_Swift
 class Validations{
     
     var pass: String = ""
+    
     //EMAIL
     func emailValidation(_ sender: ACFloatingTextfield) -> Bool {
         if let email = sender.text

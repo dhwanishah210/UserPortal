@@ -25,7 +25,6 @@
 		7B9279802BAC107E0006531A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92797A2BAC107E0006531A /* TabBarViewController.swift */; };
 		7B9279812BAC107E0006531A /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92797B2BAC107E0006531A /* SignupViewController.swift */; };
 		7B9279872BAC10A60006531A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279842BAC10A60006531A /* CustomButton.swift */; };
-		7B9279882BAC10A60006531A /* CustomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279852BAC10A60006531A /* CustomCollectionViewCell.swift */; };
 		7B9279892BAC10A60006531A /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279862BAC10A60006531A /* CustomTableViewCell.swift */; };
 		7B92798F2BAC10BB0006531A /* MobilityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92798C2BAC10BB0006531A /* MobilityAPI.swift */; };
 		7B9279902BAC10BB0006531A /* ApiHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92798D2BAC10BB0006531A /* ApiHelper.swift */; };
@@ -63,7 +62,6 @@
 		7B92797A2BAC107E0006531A /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		7B92797B2BAC107E0006531A /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		7B9279842BAC10A60006531A /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
-		7B9279852BAC10A60006531A /* CustomCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B9279862BAC10A60006531A /* CustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		7B92798C2BAC10BB0006531A /* MobilityAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobilityAPI.swift; sourceTree = "<group>"; };
 		7B92798D2BAC10BB0006531A /* ApiHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiHelper.swift; sourceTree = "<group>"; };
@@ -177,7 +175,6 @@
 			isa = PBXGroup;
 			children = (
 				7B9279842BAC10A60006531A /* CustomButton.swift */,
-				7B9279852BAC10A60006531A /* CustomCollectionViewCell.swift */,
 				7B9279862BAC10A60006531A /* CustomTableViewCell.swift */,
 				7BC5B52A2BB41815001590F0 /* CustomToast.swift */,
 			);
@@ -335,7 +332,6 @@
 			files = (
 				7B9279EC2BAC2D1C0006531A /* UserPortal.xcdatamodeld in Sources */,
 				7B9279952BAC10D00006531A /* SlideAnimation.swift in Sources */,
-				7B9279882BAC10A60006531A /* CustomCollectionViewCell.swift in Sources */,
 				7B9279892BAC10A60006531A /* CustomTableViewCell.swift in Sources */,
 				7B92798F2BAC10BB0006531A /* MobilityAPI.swift in Sources */,
 				7B9279872BAC10A60006531A /* CustomButton.swift in Sources */,

@@ -74,9 +74,6 @@ class DataManager {
         }
         return mobilityAPI
     }
-
-
-
     
     private func insertDataIntoCoreData(mobilityAPI: MobilityAPI) {
         DispatchQueue.main.async {
@@ -146,7 +143,5 @@ class DataManager {
             print("Error deleting user data from the database: \(error.localizedDescription)")
         }
     }
-    
-    // Other data management methods...
 }
 

@@ -5,12 +5,12 @@
 //  Created by Dhwani Shah on 28/03/24.
 //
 
-import Foundation
 import UIKit
 import CoreData
 
 //AddUser
 extension DashboardViewController{
+    
     @IBAction func addUser(_ sender: UIButton) {
         let alertController = UIAlertController(title: "Add Data", message: "Add data for ", preferredStyle: .alert)
         
@@ -20,7 +20,6 @@ extension DashboardViewController{
         
         alertController.addTextField { (textField) in
             textField.placeholder = "Gender"
-            //textField.keyboardType = .numberPad
         }
         
         alertController.addTextField { (textField) in
@@ -43,12 +42,17 @@ extension DashboardViewController{
             let mobileTextField = alertController.textFields?[2]
             let emailTextField = alertController.textFields?[3]
             
+            var genderInt: Int?
+            if genderTextField?.text?.lowercased() == "male"{
+                genderInt = 0
+            }else if genderTextField?.text?.lowercased() == "female"{
+                genderInt = 1
+            }
+            
             guard let name = nameTextField?.text,
-                  let genderText = genderTextField?.text,
-                  let gender = Int(genderText),
+                  let gender = genderInt,
                   let mobile = mobileTextField?.text,
                   let email = emailTextField?.text else {
-                // Handle invalid input or empty fields
                 return
             }
             
@@ -56,7 +60,7 @@ extension DashboardViewController{
                 return
             }
             
-            // Now make a network request to add the user data to the API
+            //Body to add the user data to the API
             let parameters: [String: Any] = [
                 "name": name,
                 "gender": gender,
@@ -106,7 +110,6 @@ extension DashboardViewController{
                     }
                 case .failure(let error):
                     print("Failed to add user to API: \(error)")
-                // Handle failure if needed
                 }
             }
         }

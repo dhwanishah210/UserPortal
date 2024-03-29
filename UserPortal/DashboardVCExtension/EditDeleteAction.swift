@@ -5,7 +5,6 @@
 //  Created by Dhwani Shah on 28/03/24.
 //
 
-import Foundation
 import UIKit
 import CoreData
 
@@ -19,21 +18,17 @@ extension DashboardViewController: UITableViewDelegate {
         let vc = self.storyboard?.instantiateViewController(identifier: "ProfileVC") as! ProfileViewController
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
-        self.navigationController?.pushViewController(vc, animated: true)
-        
-        // Pass the selected data to ProfileViewController
         vc.userData = data
-        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
+                
         let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (action, view, completion) in
-            // Perform edit action
             self?.editData(at: indexPath)
             completion(true)
         }
-        editAction.backgroundColor = .gray // Customize the background color
+        editAction.backgroundColor = .gray
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completion) in
             guard let self = self else { return }
@@ -46,7 +41,6 @@ extension DashboardViewController: UITableViewDelegate {
             alertController.addAction(cancelAction)
             
             let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
-                // Perform delete action
                 self.deleteData(at: indexPath)
                 completion(true)
             }
@@ -57,8 +51,7 @@ extension DashboardViewController: UITableViewDelegate {
         
         // Create configuration
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
-        configuration.performsFirstActionWithFullSwipe = false // prevents the action from being triggered by a full swipe
-        
+        configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }
     
@@ -82,7 +75,7 @@ extension DashboardViewController: UITableViewDelegate {
         
         alertController.addTextField { (textField) in
             textField.placeholder = "Gender"
-            //textField.text = String(data.gender!)
+        
             if(data.gender! == 1){
                 textField.text = "Female"
             }else{
@@ -107,9 +100,14 @@ extension DashboardViewController: UITableViewDelegate {
                   let newMobile = mobileTextField.text else {
                 return
             }
-            
+            var genderInt: Int16?
+            if newGender.lowercased() == "male"{
+                genderInt = 0
+            }else if newGender.lowercased() == "female"{
+                genderInt = 1
+            }
             // Update the data
-            self?.updateData(id: data.id!, newName: newName, newEmail: newEmail, newGender: Int16(newGender) ?? 0, newMobile: newMobile)
+            self?.updateData(id: data.id!, newName: newName, newEmail: newEmail, newGender: genderInt!, newMobile: newMobile)
         }
         
         alertController.addAction(cancelAction)
@@ -173,11 +171,12 @@ extension DashboardViewController: UITableViewDelegate {
     
     
     func deleteData(at indexPath: IndexPath) {
-        
+
         guard let data = mobilityAPI?.data?[indexPath.row] else {
             return
         }
         let parameters: [String: Any] = ["id": data.id as Any]
+        print(parameters)
         
         // Call the API to delete the user
         ApiHelper.deleteUser(parameters: parameters) { result in

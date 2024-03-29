@@ -8,6 +8,9 @@
 import UIKit
 import CoreData
 
+var storedKey = UserDefaults.standard.string(forKey: "sortKey")
+var storedValue = UserDefaults.standard.bool(forKey: "value")
+
 class DashboardViewController: UIViewController, UIViewControllerTransitioningDelegate {
     
     var noDataFoundImageView: UIImageView?
@@ -21,7 +24,7 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     
     let dateFormatter = DateFormatter()
     let currentDate = Date()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
@@ -29,9 +32,8 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
         // Add tap gesture recognizer to dismiss keyboard
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tapGesture)
-        fetchUserData()
-        //let filterSettings = retrieveFilterSettings()
-        //fetchAndSortData(sortKey: filterSettings.sortKey, ascending: filterSettings.ascending)
+        
+        fetchUserData()        
     }
     
 }
@@ -47,7 +49,6 @@ extension DashboardViewController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         
-        
         if let data = mobilityAPI?.data?[indexPath.row] {
             cell.lblName?.text = "\(data.name ?? "")"
             cell.lblEmail?.text = "\(data.email ?? "")"
@@ -56,7 +57,3 @@ extension DashboardViewController: UITableViewDataSource {
         return cell
     }
 }
-
-
-
-

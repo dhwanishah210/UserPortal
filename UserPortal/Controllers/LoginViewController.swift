@@ -7,8 +7,9 @@
 
 import UIKit
 import ACFloatingTextfield_Swift
-class LoginViewController: UIViewController {
 
+class LoginViewController: UIViewController {
+    
     @IBOutlet weak var txtEmail: ACFloatingTextfield!
     @IBOutlet weak var txtPassword: ACFloatingTextfield!
     
@@ -16,7 +17,6 @@ class LoginViewController: UIViewController {
     var pass: Bool = false
     
     var validation = Validations()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,14 +57,13 @@ extension LoginViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return SlideTransition(isPresenting: true)
     }
-
+    
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return SlideTransition(isPresenting: false)
     }
 }
 
 extension LoginViewController: UITextFieldDelegate {
-
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Dismiss keyboard when return key is pressed
         textField.resignFirstResponder()

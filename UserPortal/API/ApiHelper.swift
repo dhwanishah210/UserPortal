@@ -33,8 +33,8 @@ class ApiHelper {
             
             do {
                 let decoder = JSONDecoder()
-                let newsFeed = try decoder.decode(MobilityAPI.self, from: data)
-                completion(.success(newsFeed))
+                let user = try decoder.decode(MobilityAPI.self, from: data)
+                completion(.success(user))
             } catch {
                 completion(.failure(error))
             }
@@ -75,7 +75,6 @@ class ApiHelper {
             
             if let data = data, let responseBody = String(data: data, encoding: .utf8) {
                 completion(.success(responseBody))
-                print("OK")
             } else {
                 completion(.failure(NSError(domain: "No Data Received", code: -1, userInfo: nil)))
             }
@@ -93,7 +92,7 @@ class ApiHelper {
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "POST" // or "PATCH" depending on the API requirements
+        request.httpMethod = "POST" 
         
         // Set request body with parameters
         do {
@@ -129,7 +128,7 @@ class ApiHelper {
     
     //DELETE
     static func deleteUser(parameters: [String: Any], completion: @escaping (Result<String, Error>) -> Void) {
- 
+        
         guard let url = URL(string: "http://192.168.2.160:9001/api/user/deleteUser") else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return

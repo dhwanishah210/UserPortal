@@ -22,10 +22,11 @@ extension DashboardViewController: UISearchBarDelegate {
     }
     
     @objc func handleTap() {
-            searchBar.resignFirstResponder() // Dismiss the keyboard associated with the search bar
-        }
+        searchBar.resignFirstResponder() // Dismiss the keyboard associated with the search bar
+    }
     
     func searchData(with searchText: String) {
+        
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
@@ -33,7 +34,7 @@ extension DashboardViewController: UISearchBarDelegate {
         let context = appDelegate.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
         
-        // Create compound predicate to search in name, email, and mobile fields
+        // Search in name, email, and mobile fields
         let predicate = NSPredicate(format: "name CONTAINS[c] %@ OR email CONTAINS[c] %@ OR mobile CONTAINS[c] %@", searchText, searchText, searchText)
         fetchRequest.predicate = predicate
         
@@ -52,6 +53,7 @@ extension DashboardViewController: UISearchBarDelegate {
             
             // Reload table view to reflect the changes
             tableView.reloadData()
+            
         } catch {
             print("Error fetching filtered data: \(error.localizedDescription)")
         }
