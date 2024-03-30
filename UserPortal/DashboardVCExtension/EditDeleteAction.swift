@@ -11,6 +11,7 @@ import CoreData
 extension DashboardViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("OKOK")
         guard let data = mobilityAPI?.data?[indexPath.row] else {
             return
         }
@@ -18,8 +19,11 @@ extension DashboardViewController: UITableViewDelegate {
         let vc = self.storyboard?.instantiateViewController(identifier: "ProfileVC") as! ProfileViewController
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
-        vc.userData = data
         self.navigationController?.pushViewController(vc, animated: true)
+        
+        // Pass the selected data to ProfileViewController
+        vc.userData = data
+        
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -137,7 +141,8 @@ extension DashboardViewController: UITableViewDelegate {
                         return
                     }
                     let context = appDelegate.persistentContainer.viewContext
-                    self.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Format for full date and time
+                    
+                    self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS" // Format for full date and time
                     let dateTimeString = self.dateFormatter.string(from: self.currentDate)
                     
                     // Fetch the corresponding DbData object from the database using its unique identifier (ID)

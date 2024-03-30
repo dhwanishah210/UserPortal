@@ -21,9 +21,10 @@ extension DashboardViewController: UISearchBarDelegate {
         }
     }
     
-    @objc func handleTap() {
-        searchBar.resignFirstResponder() // Dismiss the keyboard associated with the search bar
-    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+            searchBar.resignFirstResponder() // Dismiss the keyboard
+            // Perform any search operation here
+        }
     
     func searchData(with searchText: String) {
         

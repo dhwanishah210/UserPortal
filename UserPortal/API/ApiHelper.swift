@@ -11,7 +11,7 @@ class ApiHelper {
     
     //READ
     static func fetchUserData(completion: @escaping (Result<MobilityAPI, Error>) -> Void) {
-        let urlString = "http://192.168.2.160:9001/api/user/getAllUsers"
+        let urlString = "http://192.168.2.166:9001/api/user/getAllUsers/"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return
@@ -45,7 +45,7 @@ class ApiHelper {
     
     //CREATE
     static func addUser(parameters: [String: Any], completion: @escaping (Result<String, Error>) -> Void) {
-        guard let url = URL(string: "http://192.168.2.160:9001/api/user/addUser") else {
+        guard let url = URL(string: "http://192.168.2.166:9001/api/user/addUser") else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return
         }
@@ -86,7 +86,7 @@ class ApiHelper {
     
     //UPDATE
     static func updateUser(parameters: [String: Any], completion: @escaping (Result<String, Error>) -> Void) {
-        guard let url = URL(string: "http://192.168.2.160:9001/api/user/updateUser") else {
+        guard let url = URL(string: "http://192.168.2.166:9001/api/user/updateUser") else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return
         }
@@ -129,7 +129,7 @@ class ApiHelper {
     //DELETE
     static func deleteUser(parameters: [String: Any], completion: @escaping (Result<String, Error>) -> Void) {
         
-        guard let url = URL(string: "http://192.168.2.160:9001/api/user/deleteUser") else {
+        guard let url = URL(string: "http://192.168.2.166:9001/api/user/deleteUser") else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return
         }

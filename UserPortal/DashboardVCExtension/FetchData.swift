@@ -10,6 +10,7 @@ import CoreData
 //GetData
 extension DashboardViewController{
     
+    
     func fetchUserData() {
         ApiHelper.fetchUserData { [weak self] (result: Result<MobilityAPI, Error>) in
             guard let self = self else { return }

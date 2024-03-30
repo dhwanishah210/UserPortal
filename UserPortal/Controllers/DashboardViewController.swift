@@ -7,11 +7,14 @@
 
 import UIKit
 import CoreData
+import Network
 
 var storedKey = UserDefaults.standard.string(forKey: "sortKey")
 var storedValue = UserDefaults.standard.bool(forKey: "value")
 
 class DashboardViewController: UIViewController, UIViewControllerTransitioningDelegate {
+    
+    let monitor = NWPathMonitor()
     
     var noDataFoundImageView: UIImageView?
     var mobilityAPI: MobilityAPI?
@@ -24,18 +27,40 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     
     let dateFormatter = DateFormatter()
     let currentDate = Date()
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
         
-        // Add tap gesture recognizer to dismiss keyboard
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        view.addGestureRecognizer(tapGesture)
+        UserDefaults.standard.set("name", forKey: "sortKey")
+                
+        fetchUserData()
         
-        fetchUserData()        
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        monitor.pathUpdateHandler = { path in
+            if path.status != .satisfied {
+                DispatchQueue.main.async {
+                    self.showNetworkUnavailableMessage()
+                }
+            }
+        }
+        
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        monitor.start(queue: queue)
     }
     
+    func showNetworkUnavailableMessage() {
+        
+        let alertController = UIAlertController(title: "Network Unavailable", message: "Please enable Wi-Fi or mobile data to access the internet.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    deinit {
+        monitor.cancel()
+    }
 }
 
 //CELL of Table
@@ -55,5 +80,15 @@ extension DashboardViewController: UITableViewDataSource {
         }
         
         return cell
+    }
+}
+
+extension DashboardViewController {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return SlideTransition(isPresenting: true)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return SlideTransition(isPresenting: false)
     }
 }

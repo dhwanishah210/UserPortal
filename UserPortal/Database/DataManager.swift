@@ -19,30 +19,7 @@ class DataManager {
     
 
     func fetchData(completion: @escaping (Result<MobilityAPI, Error>) -> Void) {
-        
-        // First attempt to fetch data from the API
-        ApiHelper.fetchUserData { result in
-            switch result {
-            case .success(let mobilityAPI):
-                // If data is successfully fetched from the API, insert it into Core Data
-                self.insertDataIntoCoreData(mobilityAPI: mobilityAPI)
-                completion(.success(mobilityAPI)) // Return the fetched data
-            case .failure(let apiError):
-                print("API Error: \(apiError)")
-                // If fetching data from the API fails, attempt to fetch from Core Data
-                guard let fetchedData = self.fetchDataFromCoreData() else {
-                    completion(.failure(apiError)) // If no data is available in Core Data, return API error
-                    return
-                }
-                // If data is successfully fetched from Core Data, return it
-                completion(.success(fetchedData))
-            }
-        }
-    }
-
-    func fetchDataFromCoreData() -> MobilityAPI? {
-        var mobilityAPI: MobilityAPI?
-        DispatchQueue.main.sync {
+        DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
@@ -53,27 +30,67 @@ class DataManager {
             do {
                 let dataObjects = try context.fetch(fetchRequest)
                 
-                // Check if there are no rows present in Core Data
+                // If there are no rows present in Core Data, fetch data from the API
                 if dataObjects.isEmpty {
-                    return
+                    ApiHelper.fetchUserData { result in
+                        switch result {
+                        case .success(let mobilityAPI):
+                            // If data is successfully fetched from the API, insert it into Core Data
+                            self.insertDataIntoCoreData(mobilityAPI: mobilityAPI)
+                            completion(.success(mobilityAPI)) // Return the fetched data
+                        case .failure(let apiError):
+                            print("API Error: \(apiError)")
+                            completion(.failure(apiError)) // Return API error
+                        }
+                    }
+                } else {
+                    // If data exists in Core Data, fetch it and return
+                    guard let fetchedData = self.fetchDataFromCoreData() else {
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch data from Core Data"])
+                        completion(.failure(error)) // Return error if fetching from Core Data fails
+                        return
+                    }
+                    completion(.success(fetchedData)) // Return fetched data from Core Data
                 }
-                
-                // Convert fetched Core Data objects to MobilityAPI model
-                let data = dataObjects.compactMap { dbData -> Data? in
-                    // Map DbData to Data model
-                    return Data(id: Int(dbData.id), name: dbData.name, gender: Int(dbData.gender), email: dbData.email, mobile: dbData.mobile, createdAt: dbData.createdAt, updatedAt: dbData.updatedAt)
-                }
-                
-                // Construct MobilityAPI model with the fetched data
-                mobilityAPI = MobilityAPI(status: 200, data: data, message: "Data fetched from Core Data")
-                
-                
             } catch {
                 print("Error fetching data from Core Data: \(error.localizedDescription)")
+                completion(.failure(error)) // Return error if fetching from Core Data fails
             }
         }
-        return mobilityAPI
     }
+
+
+    func fetchDataFromCoreData() -> MobilityAPI? {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return nil
+        }
+        
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+        
+        do {
+            let dataObjects = try context.fetch(fetchRequest)
+            
+            // Check if there are no rows present in Core Data
+            if dataObjects.isEmpty {
+                return nil
+            }
+            
+            // Convert fetched Core Data objects to MobilityAPI model
+            let data = dataObjects.compactMap { dbData -> Data? in
+                // Map DbData to Data model
+                return Data(id: Int(dbData.id), name: dbData.name, gender: Int(dbData.gender), email: dbData.email, mobile: dbData.mobile, createdAt: dbData.createdAt, updatedAt: dbData.updatedAt)
+            }
+            
+            // Construct MobilityAPI model with the fetched data
+            return MobilityAPI(status: 200, data: data, message: "Data fetched from Core Data")
+            
+        } catch {
+            print("Error fetching data from Core Data: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
     
     private func insertDataIntoCoreData(mobilityAPI: MobilityAPI) {
         DispatchQueue.main.async {

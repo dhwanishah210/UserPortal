@@ -15,6 +15,7 @@
 		7B21E6BF2BB539A80075EF53 /* AddUserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21E6BE2BB539A80075EF53 /* AddUserAction.swift */; };
 		7B21E6C22BB539D40075EF53 /* FetchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21E6C12BB539D40075EF53 /* FetchData.swift */; };
 		7B21E6C52BB53A100075EF53 /* EditDeleteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21E6C42BB53A100075EF53 /* EditDeleteAction.swift */; };
+		7B52502D2BB6D79F00AD3083 /* AddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B52502C2BB6D79F00AD3083 /* AddUserViewController.swift */; };
 		7B92794F2BAC0FB10006531A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92794E2BAC0FB10006531A /* AppDelegate.swift */; };
 		7B9279512BAC0FB10006531A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279502BAC0FB10006531A /* SceneDelegate.swift */; };
 		7B92795B2BAC0FC00006531A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B92795A2BAC0FC00006531A /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		7B21E6BE2BB539A80075EF53 /* AddUserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserAction.swift; sourceTree = "<group>"; };
 		7B21E6C12BB539D40075EF53 /* FetchData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchData.swift; sourceTree = "<group>"; };
 		7B21E6C42BB53A100075EF53 /* EditDeleteAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDeleteAction.swift; sourceTree = "<group>"; };
+		7B52502C2BB6D79F00AD3083 /* AddUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserViewController.swift; sourceTree = "<group>"; };
 		7B92794B2BAC0FB10006531A /* UserPortal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UserPortal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B92794E2BAC0FB10006531A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B9279502BAC0FB10006531A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				7B9279762BAC107E0006531A /* ProfileViewController.swift */,
 				7B92797B2BAC107E0006531A /* SignupViewController.swift */,
 				7B92797A2BAC107E0006531A /* TabBarViewController.swift */,
+				7B52502C2BB6D79F00AD3083 /* AddUserViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B9279EC2BAC2D1C0006531A /* UserPortal.xcdatamodeld in Sources */,
+				7B52502D2BB6D79F00AD3083 /* AddUserViewController.swift in Sources */,
 				7B9279952BAC10D00006531A /* SlideAnimation.swift in Sources */,
 				7B9279892BAC10A60006531A /* CustomTableViewCell.swift in Sources */,
 				7B92798F2BAC10BB0006531A /* MobilityAPI.swift in Sources */,
