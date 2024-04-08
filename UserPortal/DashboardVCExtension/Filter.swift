@@ -70,8 +70,8 @@ extension DashboardViewController{
             let context = appDelegate.persistentContainer.viewContext
             let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
             
-            // Sort descriptors based on sort key and order
-            let sortDescriptor = NSSortDescriptor(key: sortKey, ascending: ascending) // <- Update ascending to true or false
+            // Sort descriptors based on sort key and order, with case-insensitive comparison
+            let sortDescriptor = NSSortDescriptor(key: sortKey, ascending: ascending, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
             fetchRequest.sortDescriptors = [sortDescriptor]
             
             do {
@@ -96,10 +96,10 @@ extension DashboardViewController{
         }
     }
 
+
     
     func convertDbDataToData(_ dbData: DbData) -> Data? {
         // Convert DbData to Data object as per your requirement
-
         let data = Data(id: Int(dbData.id), name: dbData.name, gender: Int(dbData.gender), email: dbData.email, mobile: dbData.mobile)
         return data
     }

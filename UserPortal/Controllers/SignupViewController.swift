@@ -11,22 +11,20 @@ import ACFloatingTextfield_Swift
 class SignupViewController: UIViewController {
     
     var validation = Validations()
+    var email: Bool = false
+    var phone: Bool = false
+    var pass: Bool = false
+    var confirmPass: Bool = false
     
     @IBOutlet weak var btnProfilePhoto: UIButton!
     @IBOutlet weak var btnSignup: CustomButton!
     @IBOutlet weak var radioFemale: UIButton!
     @IBOutlet weak var radioMale: UIButton!
-    
     @IBOutlet weak var txtName: ACFloatingTextfield!
     @IBOutlet weak var txtEmail: ACFloatingTextfield!
     @IBOutlet weak var txtPhoneNumber: ACFloatingTextfield!
     @IBOutlet weak var txtPassword: ACFloatingTextfield!
     @IBOutlet weak var txtConfirmPassword: ACFloatingTextfield!
-    
-    var email: Bool = false
-    var phone: Bool = false
-    var pass: Bool = false
-    var confirmPass: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -161,9 +159,7 @@ extension SignupViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
-
 extension SignupViewController: UITextFieldDelegate {
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Dismiss keyboard when return key is pressed
         textField.resignFirstResponder()

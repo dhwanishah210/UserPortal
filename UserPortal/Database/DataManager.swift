@@ -70,9 +70,11 @@ class DataManager {
         
         do {
             let dataObjects = try context.fetch(fetchRequest)
-            
+            print(73)
+            print(dataObjects)
             // Check if there are no rows present in Core Data
             if dataObjects.isEmpty {
+                DashboardViewController().addNoDataFoundImageView()
                 return nil
             }
             
@@ -162,6 +164,7 @@ class DataManager {
     }
     
     func clearAllData() {
+        DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
@@ -178,5 +181,6 @@ class DataManager {
                 print("Error clearing data from CoreData: \(error.localizedDescription)")
             }
         }
+    }
 }
 

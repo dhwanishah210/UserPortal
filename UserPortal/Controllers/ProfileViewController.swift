@@ -9,20 +9,15 @@ import UIKit
 
 class ProfileViewController: UIViewController, ProfileImageDelegate {
     
-    func didSelectImage(_ image: UIImage) {
-        profileImageView.image = image
-    }
+    var userData: Data?
     
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var lblEmail: UILabel!
     @IBOutlet weak var lblMobile: UILabel!
     
-    var userData: Data?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         if let userData = userData {
             lblName.text = "\(userData.name ?? "")"
             lblEmail.text = "\(userData.email ?? "")"
@@ -42,6 +37,10 @@ class ProfileViewController: UIViewController, ProfileImageDelegate {
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func didSelectImage(_ image: UIImage) {
+        profileImageView.image = image
     }
 }
 

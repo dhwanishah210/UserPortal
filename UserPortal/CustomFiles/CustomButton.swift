@@ -21,8 +21,8 @@ class CustomButton: UIButton {
     
     private func setupButton() {
         setTitleColor(.white, for: .normal)
-        layer.cornerRadius = 10 // Adjust corner radius as per your requirement
+        layer.cornerRadius = 10
         titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20) // Adjust padding as needed
+        contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     }
 }

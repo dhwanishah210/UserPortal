@@ -16,3 +16,9 @@ struct Data: Codable {
     var createdAt: String?
     var updatedAt: String?
 }
+
+struct MobilityAPI: Codable {
+    var status: Int = 0
+    var data:[Data]?
+    var message: String = ""
+}

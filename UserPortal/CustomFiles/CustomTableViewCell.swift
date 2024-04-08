@@ -12,6 +12,7 @@ class CustomTableViewCell: UITableViewCell {
     @IBOutlet weak var imgProfile: UIImageView!
     @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var lblEmail: UILabel!
+    @IBOutlet weak var lblMobile: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

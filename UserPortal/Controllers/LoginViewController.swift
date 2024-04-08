@@ -10,13 +10,12 @@ import ACFloatingTextfield_Swift
 
 class LoginViewController: UIViewController {
     
-    @IBOutlet weak var txtEmail: ACFloatingTextfield!
-    @IBOutlet weak var txtPassword: ACFloatingTextfield!
-    
     var email: Bool = false
     var pass: Bool = false
-    
     var validation = Validations()
+    
+    @IBOutlet weak var txtEmail: ACFloatingTextfield!
+    @IBOutlet weak var txtPassword: ACFloatingTextfield!
     
     override func viewDidLoad() {
         super.viewDidLoad()
