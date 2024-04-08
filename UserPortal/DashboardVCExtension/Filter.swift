@@ -29,30 +29,46 @@ extension DashboardViewController{
             key = true
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
+            print(3231)
+            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
+            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Descending(Z-A)", style: .default, handler: { (_) in
-            self.fetchAndSortData(sortKey: "name", ascending: false)
+            
             saveFilter = "name"
             key = false
+            self.fetchAndSortData(sortKey: saveFilter, ascending: key)
+
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
+            print(3232)
+            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
+            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Last Inserted", style: .default, handler: { (_) in
-            self.fetchAndSortData(sortKey: "createdAt", ascending: false)
+            
             saveFilter = "createdAt"
             key = false
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
+            self.fetchAndSortData(sortKey: "createdAt", ascending: false)
+            print(3233)
+            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
+            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Last Modified", style: .default, handler: { (_) in
-            self.fetchAndSortData(sortKey: "updatedAt", ascending: false)
+            
             saveFilter = "updatedAt"
             key = false
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
+            self.fetchAndSortData(sortKey: "updatedAt", ascending: false)
+            print(3234)
+            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
+            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -62,6 +78,9 @@ extension DashboardViewController{
     
     
     func fetchAndSortData(sortKey: String, ascending: Bool) {
+        print(sortKey)
+        print(ascending)
+        print(8282)
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return

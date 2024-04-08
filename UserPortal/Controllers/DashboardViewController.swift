@@ -23,8 +23,10 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        UserDefaults.standard.set("name", forKey: "sortKey")
-        
+//        UserDefaults.standard.set("name", forKey: "sortKey")
+//        print(2727)
+//        print(storedKey)
+//        print(storedValue)
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
         tableView.refreshControl = refreshControl
         fetchUserData()
@@ -261,7 +263,8 @@ extension DashboardViewController{
                     self.mobilityAPI = mobilityAPI
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
-                        self.fetchAndSortData(sortKey: storedKey!, ascending: storedValue)
+                        print()
+                        self.fetchAndSortData(sortKey: UserDefaults.standard.string(forKey: "sortKey") ?? "name", ascending: UserDefaults.standard.bool(forKey: "value"))
                         self.removeNoDataFoundImageView()
                         //CustomToast.show(message: mobilityAPI.message)
                         completion?()

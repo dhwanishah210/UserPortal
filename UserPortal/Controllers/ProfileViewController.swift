@@ -36,6 +36,7 @@ class ProfileViewController: UIViewController, ProfileImageDelegate {
         let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = self
+        
         self.navigationController?.popViewController(animated: true)
     }
     

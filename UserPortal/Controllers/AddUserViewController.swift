@@ -243,6 +243,7 @@ class AddUserViewController: UIViewController {
                     }
                 case .failure(let error):
                     print("Failed to add user to API: \(error)")
+                    CustomToast.show(message: error.localizedDescription)
                 }
             }
         }
