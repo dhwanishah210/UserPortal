@@ -41,7 +41,10 @@ class SignupViewController: UIViewController {
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         // Check if tap is outside the text field
         if !txtPhoneNumber.frame.contains(sender.location(in: view)) {
-            txtPhoneNumber.resignFirstResponder() // Dismiss the keyboard
+            if !txtPhoneNumber.resignFirstResponder() {
+                // Handle the case where resigning first responder fails
+                print("Failed to resign first responder")
+            }
         }
     }
     

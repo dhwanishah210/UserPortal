@@ -15,9 +15,6 @@ class DataManager {
     
     private init() {}
     
-    static var count: Int = 0
-    
-
     func fetchData(completion: @escaping (Result<MobilityAPI, Error>) -> Void) {
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -58,8 +55,8 @@ class DataManager {
             }
         }
     }
-
-
+    
+    
     func fetchDataFromCoreData() -> MobilityAPI? {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return nil
@@ -70,8 +67,6 @@ class DataManager {
         
         do {
             let dataObjects = try context.fetch(fetchRequest)
-            print(73)
-            print(dataObjects)
             // Check if there are no rows present in Core Data
             if dataObjects.isEmpty {
                 DashboardViewController().addNoDataFoundImageView()
@@ -92,6 +87,7 @@ class DataManager {
             return nil
         }
     }
+    
 
     
     func insertDataIntoCoreData(mobilityAPI: MobilityAPI) {
@@ -99,7 +95,7 @@ class DataManager {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
-
+            
             let context = appDelegate.persistentContainer.viewContext
             
             // Fetch existing DbData objects with the same IDs as in the MobilityAPI
@@ -110,14 +106,14 @@ class DataManager {
             do {
                 let existingObjects = try context.fetch(fetchRequest)
                 let existingIdsSet = Set(existingObjects.map { $0.id })
-
+                
                 for dataItem in mobilityAPI.data ?? [] {
                     // Check if the object with the same ID already exists
                     if existingIdsSet.contains(Int16(dataItem.id!)) {
                         print("Data with ID \(String(describing: dataItem.id)) already exists in the database. Skipping insertion.")
                         continue
                     }
-
+                    
                     let dbDataObject = DbData(context: context)
                     dbDataObject.id = Int16(dataItem.id!)
                     dbDataObject.name = dataItem.name
@@ -127,7 +123,7 @@ class DataManager {
                     dbDataObject.createdAt = dataItem.createdAt
                     dbDataObject.updatedAt = dataItem.updatedAt
                 }
-
+                
                 try context.save()
                 print("Data saved successfully")
             } catch {
@@ -135,23 +131,24 @@ class DataManager {
             }
         }
     }
-
+    
+    
     func deleteUserDataFromDatabase(id: Int) {
         // Access the managed object context from the app delegate
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
         let context = appDelegate.persistentContainer.viewContext
-
-        // Fetch the corresponding DbData object from the database using its unique identifier (ID)
+        
+        // Fetch the corresponding DbData object from the database using its ID
         let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %ld", id)
-
+        
         do {
             if let dbDataObject = try context.fetch(fetchRequest).first {
                 // Delete the DbData object from the database
                 context.delete(dbDataObject)
-
+                
                 // Save the changes to the database
                 try context.save()
                 print("User data deleted from the database.")
@@ -182,5 +179,57 @@ class DataManager {
             }
         }
     }
+    
+    func storeDeleteRequest(parameters: [String: Any]) {
+            // Store the delete request locally for future processing
+            // For example, you can use UserDefaults or CoreData to store the delete requests
+            // Here, I'm just demonstrating with UserDefaults
+            
+            var deleteRequests = UserDefaults.standard.array(forKey: "DeleteRequests") as? [[String: Any]] ?? []
+            deleteRequests.append(parameters)
+            UserDefaults.standard.set(deleteRequests, forKey: "DeleteRequests")
+        print(deleteRequests)
+        }
+
+    func processPendingDeleteRequests() {
+        let deleteRequests = UserDefaults.standard.array(forKey: "DeleteRequests") as? [[String: Any]] ?? []
+
+        for request in deleteRequests {
+            ApiHelper.deleteUser(parameters: request) { result in
+                switch result {
+                case .success(let response):
+                    print("User deleted successfully: \(response)")
+                    // Remove the processed delete request
+                    self.removeProcessedDeleteRequest(request)
+                case .failure(let error):
+                    print("Failed to delete user from API: \(error.localizedDescription)")
+                    // Handle the failure scenario here if needed
+                }
+            }
+        }
+    }
+
+    func removeProcessedDeleteRequest(_ request: [String: Any]) {
+        if var deleteRequests = UserDefaults.standard.array(forKey: "DeleteRequests") as? [[String: Any]] {
+            for (index, storedRequest) in deleteRequests.enumerated() {
+                // Check if the dictionaries have the same keys
+                let keysEqual = storedRequest.keys.sorted() == request.keys.sorted()
+                
+                // Check if the dictionaries have the same values for each key
+                let valuesEqual = storedRequest.allSatisfy { key, value in
+                    return request[key] as? AnyHashable == value as? AnyHashable
+                }
+                
+                if keysEqual && valuesEqual {
+                    deleteRequests.remove(at: index)
+                    UserDefaults.standard.set(deleteRequests, forKey: "DeleteRequests")
+                    break // Break out of the loop once the request is removed
+                }
+            }
+        }
+    }
+
+
+
 }
 

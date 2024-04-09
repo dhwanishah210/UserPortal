@@ -12,3 +12,6 @@ let storedValue = UserDefaults.standard.bool(forKey: "value")
 let dF = DateFormatter()
 let dateFormatter = DateFormatter()
 let currentDate = Date()
+
+
+

@@ -167,8 +167,6 @@ class ApiHelper {
                 completion(.failure(NSError(domain: "No Data Received", code: -1, userInfo: nil)))
             }
         }
-        
         task.resume()
     }
-    
 }

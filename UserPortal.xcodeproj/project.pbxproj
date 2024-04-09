@@ -24,7 +24,7 @@
 		7B9279872BAC10A60006531A /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279842BAC10A60006531A /* CustomButton.swift */; };
 		7B9279892BAC10A60006531A /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279862BAC10A60006531A /* CustomTableViewCell.swift */; };
 		7B9279902BAC10BB0006531A /* ApiHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92798D2BAC10BB0006531A /* ApiHelper.swift */; };
-		7B9279912BAC10BB0006531A /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92798E2BAC10BB0006531A /* Data.swift */; };
+		7B9279912BAC10BB0006531A /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92798E2BAC10BB0006531A /* UserModel.swift */; };
 		7B9279952BAC10D00006531A /* SlideAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9279942BAC10D00006531A /* SlideAnimation.swift */; };
 		7B92799C2BAC13CB0006531A /* Validations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92799B2BAC13CB0006531A /* Validations.swift */; };
 		7B9279A02BAC14E20006531A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B92799F2BAC14E20006531A /* Main.storyboard */; };
@@ -58,7 +58,7 @@
 		7B9279842BAC10A60006531A /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		7B9279862BAC10A60006531A /* CustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		7B92798D2BAC10BB0006531A /* ApiHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiHelper.swift; sourceTree = "<group>"; };
-		7B92798E2BAC10BB0006531A /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		7B92798E2BAC10BB0006531A /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		7B9279942BAC10D00006531A /* SlideAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimation.swift; sourceTree = "<group>"; };
 		7B92799B2BAC13CB0006531A /* Validations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validations.swift; sourceTree = "<group>"; };
 		7B92799F2BAC14E20006531A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 				7BEE18B32BC3EEE700490370 /* Model */,
 				7B9279682BAC0FEC0006531A /* Controllers */,
 				7B9279672BAC0FE50006531A /* Animation */,
-				7B9279662BAC0FD50006531A /* API */,
+				7B9279662BAC0FD50006531A /* Api Service */,
 				7B9279692BAC0FF40006531A /* CustomFiles */,
 				7B21E6AF2BB5382B0075EF53 /* DashboardVCExtension */,
 				7B9279A32BAC1B070006531A /* Database */,
@@ -131,12 +131,12 @@
 			path = UserPortal;
 			sourceTree = "<group>";
 		};
-		7B9279662BAC0FD50006531A /* API */ = {
+		7B9279662BAC0FD50006531A /* Api Service */ = {
 			isa = PBXGroup;
 			children = (
 				7B92798D2BAC10BB0006531A /* ApiHelper.swift */,
 			);
-			path = API;
+			path = "Api Service";
 			sourceTree = "<group>";
 		};
 		7B9279672BAC0FE50006531A /* Animation */ = {
@@ -185,7 +185,7 @@
 		7BEE18B32BC3EEE700490370 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7B92798E2BAC10BB0006531A /* Data.swift */,
+				7B92798E2BAC10BB0006531A /* UserModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -351,7 +351,7 @@
 				7B9279F02BAC2DF60006531A /* DbData+CoreDataClass.swift in Sources */,
 				7B9279F12BAC2DF60006531A /* DbData+CoreDataProperties.swift in Sources */,
 				7B92797E2BAC107E0006531A /* LoginViewController.swift in Sources */,
-				7B9279912BAC10BB0006531A /* Data.swift in Sources */,
+				7B9279912BAC10BB0006531A /* UserModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

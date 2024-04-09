@@ -23,10 +23,6 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        UserDefaults.standard.set("name", forKey: "sortKey")
-//        print(2727)
-//        print(storedKey)
-//        print(storedValue)
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
         tableView.refreshControl = refreshControl
         fetchUserData()
@@ -40,11 +36,11 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
         }
         let queue = DispatchQueue(label: "NetworkMonitor")
         monitor.start(queue: queue)
-        
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     @objc func refreshData(_ sender: Any) {
+        DataManager.shared.processPendingDeleteRequests()
         fetchUserData()
     }
     
@@ -84,6 +80,10 @@ extension DashboardViewController: UITableViewDataSource {
 
 //EDIT and DELETE
 extension DashboardViewController: UITableViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = mobilityAPI?.data?[indexPath.row] else {
@@ -146,7 +146,6 @@ extension DashboardViewController: UITableViewDelegate {
             return
         }
         let parameters: [String: Any] = ["id": data.id as Any]
-        print(parameters)
         
         // Call the API to delete the user
         ApiHelper.deleteUser(parameters: parameters) { result in
@@ -160,8 +159,13 @@ extension DashboardViewController: UITableViewDelegate {
                 self.fetchUserData()
             case .failure(let error):
                 CustomToast.show(message: error.localizedDescription)
-                print("Failed to delete user: \(error)")
                 
+                DispatchQueue.main.async {
+                    DataManager.shared.deleteUserDataFromDatabase(id: data.id!)
+                    print("User deleted from Local Database: \(error)")
+                    self.fetchUserData()
+                    DataManager.shared.storeDeleteRequest(parameters: parameters)
+                }
             }
         }
     }
@@ -242,6 +246,7 @@ extension DashboardViewController{
             case .failure(let error):
                 print("Error fetching data: \(error)")
                 self.fetchDataAndUpdateUI(completion: nil)
+                //self.refreshControl.endRefreshing()
             }
         }
     }
@@ -263,9 +268,9 @@ extension DashboardViewController{
                     self.mobilityAPI = mobilityAPI
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
-                        print()
                         self.fetchAndSortData(sortKey: UserDefaults.standard.string(forKey: "sortKey") ?? "name", ascending: UserDefaults.standard.bool(forKey: "value"))
                         self.removeNoDataFoundImageView()
+                        self.refreshControl.endRefreshing()
                         //CustomToast.show(message: mobilityAPI.message)
                         completion?()
                     }}
@@ -279,7 +284,9 @@ extension DashboardViewController{
                     self.mobilityAPI = localData
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
+                        let storedValue = true
                         self.fetchAndSortData(sortKey: storedKey!, ascending: storedValue)
+                        self.refreshControl.endRefreshing()
                         self.removeNoDataFoundImageView()
                         completion?()
                     }

@@ -138,59 +138,26 @@ class AddUserViewController: UIViewController {
             "email": newEmail,
             "mobile": newMobile
         ]
-        
         ApiHelper.updateUser(parameters: parameters) { result in
-            switch result {
-            case .success(let response):
-                print("User data updated successfully: \(response)")
-                
-                // Access the managed object context from the app delegate
-                DispatchQueue.main.async {
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                        return
-                    }
-                    let context = appDelegate.persistentContainer.viewContext
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    print("User edited successfully: \(response)")
+                    DataManager.shared.clearAllData()
+                    // Update UI here
+                    let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
+                    vc.modalPresentationStyle = .custom
+                    vc.transitioningDelegate = self
+                    self.navigationController?.popViewController(animated: true)
                     
-                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS" // Format for full date and time
-                    let dateTimeString = dateFormatter.string(from: currentDate)
-                    
-                    // Fetch the corresponding DbData object from the database using its unique identifier (ID)
-                    let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "id == %ld", id)
-                    print(id)
-                    do {
-                        if let dbDataObject = try context.fetch(fetchRequest).first {
-                            // Update the attributes of the DbData object with the new values
-                            dbDataObject.name = newName
-                            dbDataObject.email = newEmail
-                            dbDataObject.updatedAt = dateTimeString
-                            
-                            // Save the changes to the database
-                            try context.save()
-                            let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
-                            vc.modalPresentationStyle = .custom
-                            vc.transitioningDelegate = self
-                            self.navigationController?.popViewController(animated: true)
-                            DashboardViewController().fetchUserData()
-                        } else {
-                            print("Data not found in database.")
-                        }
-                    } catch {
-                        print("Error updating data: \(error.localizedDescription)")
-                    }
+                case .failure(let error):
+                    print("Failed to edit user from API: \(error.localizedDescription)")
                 }
-                
-            case .failure(let error):
-                print("Failed to update user data: \(error)")
-                CustomToast.show(message: error.localizedDescription)
             }
         }
     }
     
     func addUser(name: String, gender: Int, mobile: String, email: String) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
         
         let parameters: [String: Any] = [
             "name": name,
@@ -203,47 +170,16 @@ class AddUserViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
-                    if let responseData = response.data(using: .utf8),
-                       let json = try? JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
-                        let msg = json["message"] as? String
-                        
-                        CustomToast.show(message: msg ?? "User added successfully to the API")
-                        
-                        if let data = json["data"] as? Int {
-                            let context = appDelegate.persistentContainer.viewContext
-                            let dbDataObject = DbData(context: context)
-                            dbDataObject.id = Int16(data)
-                            dbDataObject.name = name
-                            dbDataObject.gender = Int16(gender)
-                            dbDataObject.mobile = mobile
-                            dbDataObject.email = email
-                            
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
-                            let currentDate = Date()
-                            dbDataObject.createdAt = dateFormatter.string(from: currentDate)
-                            dbDataObject.updatedAt = dateFormatter.string(from: currentDate)
-                            
-                            do {
-                                try context.save()
-                                print("Data saved successfully")
-                                let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
-                                vc.modalPresentationStyle = .custom
-                                vc.transitioningDelegate = self
-                                self.navigationController?.popViewController(animated: true)
-                            } catch {
-                                print("Error saving data: \(error.localizedDescription)")
-                                CustomToast.show(message: error.localizedDescription)
-                            }
-                        } else {
-                            print("Failed to extract data from response.")
-                        }
-                    } else {
-                        print("Failed to parse JSON response.")
-                    }
+                    print("User added successfully: \(response)")
+                    DataManager.shared.clearAllData()
+                    // Update UI here
+                    let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
+                    vc.modalPresentationStyle = .custom
+                    vc.transitioningDelegate = self
+                    self.navigationController?.popViewController(animated: true)
+                    
                 case .failure(let error):
-                    print("Failed to add user to API: \(error)")
-                    CustomToast.show(message: error.localizedDescription)
+                    print("Failed to add user from API: \(error.localizedDescription)")
                 }
             }
         }

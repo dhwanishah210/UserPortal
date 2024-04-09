@@ -11,8 +11,8 @@ import UIKit
 //NoDataFound Image
 extension DashboardViewController{
     func addNoDataFoundImageView() {
-        // Create and configure the "No Data Found" image view
         let image = UIImage(named: "noDataFound")
+        
         noDataFoundImageView = UIImageView(image: image)
         noDataFoundImageView?.contentMode = .scaleAspectFit
         noDataFoundImageView?.translatesAutoresizingMaskIntoConstraints = false

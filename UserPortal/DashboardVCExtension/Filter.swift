@@ -29,9 +29,6 @@ extension DashboardViewController{
             key = true
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
-            print(3231)
-            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
-            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Descending(Z-A)", style: .default, handler: { (_) in
@@ -42,9 +39,6 @@ extension DashboardViewController{
 
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
-            print(3232)
-            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
-            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Last Inserted", style: .default, handler: { (_) in
@@ -54,9 +48,6 @@ extension DashboardViewController{
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
             self.fetchAndSortData(sortKey: "createdAt", ascending: false)
-            print(3233)
-            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
-            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Last Modified", style: .default, handler: { (_) in
@@ -66,9 +57,6 @@ extension DashboardViewController{
             UserDefaults.standard.set(saveFilter, forKey: "sortKey")
             UserDefaults.standard.set(key, forKey: "value")
             self.fetchAndSortData(sortKey: "updatedAt", ascending: false)
-            print(3234)
-            print("saveFilter:", UserDefaults.standard.string(forKey: "sortKey") ?? "No value")
-            print("key:", UserDefaults.standard.bool(forKey: "value"))
         }))
         
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -78,9 +66,6 @@ extension DashboardViewController{
     
     
     func fetchAndSortData(sortKey: String, ascending: Bool) {
-        print(sortKey)
-        print(ascending)
-        print(8282)
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
@@ -89,32 +74,52 @@ extension DashboardViewController{
             let context = appDelegate.persistentContainer.viewContext
             let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
             
-            // Sort descriptors based on sort key and order, with case-insensitive comparison
-            let sortDescriptor = NSSortDescriptor(key: sortKey, ascending: ascending, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
-            fetchRequest.sortDescriptors = [sortDescriptor]
-            
             do {
-                // Fetch sorted CoreData objects
-                let sortedData = try context.fetch(fetchRequest)
+                // Fetch data from Core Data
+                var fetchedData = try context.fetch(fetchRequest)
+                
+                // Sort the array manually
+                fetchedData.sort { (data1, data2) -> Bool in
+                    switch sortKey {
+                    case "name":
+                        let name1 = data1.name!.trimmingCharacters(in: .whitespaces)
+                        let name2 = data2.name!.trimmingCharacters(in: .whitespaces)
+                        if ascending {
+                            return name1.localizedCaseInsensitiveCompare(name2) == .orderedAscending
+                        } else {
+                            return name1.localizedCaseInsensitiveCompare(name2) == .orderedDescending
+                        }
+                    case "createdAt":
+                        if ascending {
+                            return data1.createdAt! < data2.createdAt!
+                        } else {
+                            return data1.createdAt! > data2.createdAt!
+                        }
+                    case "updatedAt":
+                        if ascending {
+                            return data1.updatedAt! < data2.updatedAt!
+                        } else {
+                            return data1.updatedAt! > data2.updatedAt!
+                        }
+                    default:
+                        // Handle unknown sort key
+                        return false
+                    }
+                }
                 
                 // Convert fetched DbData objects to Data objects
-                let convertedData = sortedData.compactMap { dbData -> Data? in
-                    // Convert DbData to Data object as per your requirement
+                let convertedData = fetchedData.compactMap { dbData -> Data? in
                     return self.convertDbDataToData(dbData)
                 }
                 
-                // Update mobilityAPI data with sorted and converted CoreData objects
                 self.mobilityAPI?.data = convertedData
-                
-                // Reload table view to reflect the changes
                 self.tableView.reloadData()
                 
             } catch {
-                print("Error fetching sorted data: \(error.localizedDescription)")
+                print("Error fetching data: \(error.localizedDescription)")
             }
         }
     }
-
 
     
     func convertDbDataToData(_ dbData: DbData) -> Data? {
