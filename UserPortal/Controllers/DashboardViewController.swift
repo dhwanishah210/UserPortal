@@ -34,7 +34,10 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
                 }
             }else{
                 DispatchQueue.main.async {
-                    DataManager.shared.processPendingRequests()
+                    DataManager.shared.processPendingDeleteRequests()
+                    DataManager.shared.processPendingAddRequests()
+                    DataManager.shared.processPendingEditRequests()
+                    self.fetchUserData()
                 }
             }
         }
@@ -44,9 +47,11 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     }
     
     @objc func refreshData(_ sender: Any) {
-        //DispatchQueue.main.async {
-            //DataManager.shared.processPendingRequests()
-            fetchUserData()
+//        DispatchQueue.main.async {
+//            DataManager.shared.processPendingDeleteRequests()
+//            DataManager.shared.processPendingAddRequests()
+//            DataManager.shared.processPendingEditRequests()
+            self.fetchUserData()
         //}
     }
     

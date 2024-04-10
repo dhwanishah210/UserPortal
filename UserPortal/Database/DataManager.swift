@@ -12,7 +12,6 @@ import CoreData
 class DataManager {
     
     static let shared = DataManager()
-    private var operationQueue: [(name: String, operation: () -> Void)] = []
     
     private init() {}
     
@@ -226,9 +225,6 @@ class DataManager {
         var deleteRequests = UserDefaults.standard.array(forKey: "DeleteRequests") as? [[String: Any]] ?? []
         deleteRequests.append(parameters)
         UserDefaults.standard.set(deleteRequests, forKey: "DeleteRequests")
-        operationQueue.append(("Delete", { [weak self] in
-                    self?.processDeleteRequest()
-                }))
         print(deleteRequests)
     }
     
@@ -237,9 +233,6 @@ class DataManager {
         var addRequests = UserDefaults.standard.array(forKey: "AddRequests") as? [[String: Any]] ?? []
         addRequests.append(parameters)
         UserDefaults.standard.set(addRequests, forKey: "AddRequests")
-        operationQueue.append(("Add", { [weak self] in
-                    self?.processAddRequest()
-                }))
         print(addRequests)
     }
     
@@ -248,13 +241,10 @@ class DataManager {
         var updateRequests = UserDefaults.standard.array(forKey: "UpdateRequests") as? [[String: Any]] ?? []
         updateRequests.append(parameters)
         UserDefaults.standard.set(updateRequests, forKey: "UpdateRequests")
-        operationQueue.append(("Update", { [weak self] in
-                    self?.processUpdateRequest()
-                }))
         print(updateRequests)
     }
     
-    func processUpdateRequest() {
+    func processPendingEditRequests() {
         let editRequests = UserDefaults.standard.array(forKey: "UpdateRequests") as? [[String: Any]] ?? []
         
         for request in editRequests {
@@ -271,9 +261,10 @@ class DataManager {
                 }
             }
         }
+        
     }
     
-    func processAddRequest() {
+    func processPendingAddRequests() {
         let addRequests = UserDefaults.standard.array(forKey: "AddRequests") as? [[String: Any]] ?? []
         
         for request in addRequests {
@@ -290,9 +281,10 @@ class DataManager {
                 }
             }
         }
+        
     }
     
-    func processDeleteRequest() {
+    func processPendingDeleteRequests() {
         let deleteRequests = UserDefaults.standard.array(forKey: "DeleteRequests") as? [[String: Any]] ?? []
         
         for request in deleteRequests {
@@ -310,20 +302,6 @@ class DataManager {
             }
         }
     }
-    
-    func processPendingRequests() {
-            // Process all pending requests sequentially
-            var indexToRemove: Int?
-            for (index, (name, operation)) in operationQueue.enumerated() {
-                print("Processing \(name) request")
-                operation()
-                // Mark the index to remove if operation is successful
-                indexToRemove = index
-            }
-            // Remove the completed operation from the queue if found
-            if let index = indexToRemove {
-                operationQueue.remove(at: index)
-            }
-        }
+
 }
 
