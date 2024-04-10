@@ -152,6 +152,17 @@ class AddUserViewController: UIViewController {
                     
                 case .failure(let error):
                     print("Failed to edit user from API: \(error.localizedDescription)")
+                    let newData = Data(id: id, name: newName, gender: Int(newGender), email: newEmail, mobile: newMobile, createdAt: nil, updatedAt: nil)
+                    let mobilityAPI = MobilityAPI(status: 200, data: [newData], message: "")
+                    DispatchQueue.main.async {
+                        DataManager.shared.updateDataIntoCoreData(mobilityAPI: mobilityAPI)
+                        print("User deleted from Local Database: \(error)")
+                        DataManager.shared.storeUpdateRequest(parameters: parameters)
+                        let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
+                        vc.modalPresentationStyle = .custom
+                        vc.transitioningDelegate = self
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }
         }
@@ -180,6 +191,44 @@ class AddUserViewController: UIViewController {
                     
                 case .failure(let error):
                     print("Failed to add user from API: \(error.localizedDescription)")
+                    
+                    // If API call fails, insert the data into Core Data
+                    DispatchQueue.main.async {
+                        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                            return
+                        }
+                        
+                        let context = appDelegate.persistentContainer.viewContext
+                        
+                        // Fetch the latest record's ID from Core Data
+                        let fetchRequest: NSFetchRequest<DbData> = DbData.fetchRequest()
+                        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: false)]
+                        fetchRequest.fetchLimit = 1
+                        
+                        do {
+                            let latestObjects = try context.fetch(fetchRequest)
+                            var latestId = 0
+                            if let latestObject = latestObjects.first {
+                                latestId = Int(latestObject.id)
+                            }
+                            
+                            // Generate an incremental ID for the new record
+                            let newId = latestId + 1
+                            
+                            // Call the existing insertDataIntoCoreData function with the generated ID
+                            let newData = Data(id: newId, name: name, gender: gender, email: email, mobile: mobile, createdAt: nil, updatedAt: nil)
+                            let mobilityAPI = MobilityAPI(status: 200, data: [newData], message: "")
+                            DataManager.shared.insertDataIntoCoreData(mobilityAPI: mobilityAPI)
+                            DataManager.shared.storeAddRequest(parameters: parameters)
+                            let vc = self.storyboard?.instantiateViewController(identifier: "DashboardVC") as! DashboardViewController
+                            vc.modalPresentationStyle = .custom
+                            vc.transitioningDelegate = self
+                            self.navigationController?.popViewController(animated: true)
+                        } catch {
+                            print("Error saving data: \(error.localizedDescription)")
+                        }
+                        
+                    }
                 }
             }
         }

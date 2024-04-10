@@ -32,6 +32,10 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
                 DispatchQueue.main.async {
                     self.showNetworkUnavailableMessage()
                 }
+            }else{
+                DispatchQueue.main.async {
+                    DataManager.shared.processPendingRequests()
+                }
             }
         }
         let queue = DispatchQueue(label: "NetworkMonitor")
@@ -40,8 +44,10 @@ class DashboardViewController: UIViewController, UIViewControllerTransitioningDe
     }
     
     @objc func refreshData(_ sender: Any) {
-        DataManager.shared.processPendingDeleteRequests()
-        fetchUserData()
+        //DispatchQueue.main.async {
+            //DataManager.shared.processPendingRequests()
+            fetchUserData()
+        //}
     }
     
     func showNetworkUnavailableMessage() {
@@ -231,6 +237,7 @@ extension DashboardViewController: UISearchBarDelegate {
 extension DashboardViewController{
     
     func fetchUserData() {
+        
         ApiHelper.fetchUserData { [weak self] (result: Result<MobilityAPI, Error>) in
             guard let self = self else { return }
             switch result {
@@ -246,7 +253,7 @@ extension DashboardViewController{
             case .failure(let error):
                 print("Error fetching data: \(error)")
                 self.fetchDataAndUpdateUI(completion: nil)
-                //self.refreshControl.endRefreshing()
+            //self.refreshControl.endRefreshing()
             }
         }
     }
